@@ -79,7 +79,8 @@ runbook, which is also recorded.
   metrics arrive with delay); `catalogbridge-WorkQueueOldestAge` also alarmed. Only then was the
   cause removed and `recover.py redrive work --max 10` run: 2 messages moved back with their
   original bodies (same run identity), job COMPLETED, counters 500.
-- **Partial batch response, live:** rows 5 and 250 shared 10-message batches with healthy rows.
+- **Partial batch response, live:** rows 5 and 250 were enqueued among healthy rows and consumed
+  with worker batch size 10 (exact batch membership was not logged).
   All 498 other rows were written on their first receive and the worker logged 0 `duplicate`
   outcomes for the job, so batch-mates of the failing rows were not reprocessed: only the failed
   message IDs went back to SQS.
