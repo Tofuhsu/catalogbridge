@@ -1,0 +1,214 @@
+{
+  "label": "b1-c5",
+  "config": {
+    "batchSize": 1,
+    "maxConcurrency": 5,
+    "batchingWindowS": 0,
+    "memoryMB": 256,
+    "timeoutS": 30,
+    "codeSha256": "jheCYgbIcPgCFH9fN/5v7ynCSWWS45MJ+W0I4FzswMo=",
+    "runtime": "python3.13",
+    "arch": [
+      "arm64"
+    ]
+  },
+  "region": "us-west-2",
+  "startedAt": "2026-10-24T05:16:22.356901+00:00",
+  "note": "Run 1 may include cold starts; runs are sequential in one window.",
+  "runs": [
+    {
+      "jobs": 4,
+      "rows": 2000,
+      "clientWallSeconds": 211.06,
+      "rowsPerSecond_firstRunRequestToLastRow": 9.62,
+      "jobEndToEndSeconds": [
+        25.567,
+        16.73,
+        208.421,
+        18.576
+      ],
+      "rowLatencyMs": {
+        "p50": 14679.5,
+        "p95": 27507.8,
+        "max": 207609
+      },
+      "queueWaitMs": {
+        "p50": 13519.5,
+        "p95": 25387.1
+      },
+      "allConsistent": true,
+      "receiveCountHistogram": [
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 499,
+          "2": 1
+        },
+        {
+          "1": 500
+        }
+      ]
+    },
+    {
+      "jobs": 4,
+      "rows": 2000,
+      "clientWallSeconds": 199.82,
+      "rowsPerSecond_firstRunRequestToLastRow": 10.14,
+      "jobEndToEndSeconds": [
+        197.459,
+        13.579,
+        28.684,
+        17.684
+      ],
+      "rowLatencyMs": {
+        "p50": 13367.5,
+        "p95": 26071.2,
+        "max": 196707
+      },
+      "queueWaitMs": {
+        "p50": 12571.5,
+        "p95": 24252.45
+      },
+      "allConsistent": true,
+      "receiveCountHistogram": [
+        {
+          "1": 499,
+          "2": 1
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        }
+      ]
+    },
+    {
+      "jobs": 4,
+      "rows": 2000,
+      "clientWallSeconds": 29.16,
+      "rowsPerSecond_firstRunRequestToLastRow": 73.39,
+      "jobEndToEndSeconds": [
+        15.653,
+        24.394,
+        16.547,
+        28.37
+      ],
+      "rowLatencyMs": {
+        "p50": 13666.0,
+        "p95": 25725.6,
+        "max": 27250
+      },
+      "queueWaitMs": {
+        "p50": 12390.0,
+        "p95": 23258.7
+      },
+      "allConsistent": true,
+      "receiveCountHistogram": [
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "rowsPerSecond": [
+      9.62,
+      10.14,
+      73.39
+    ],
+    "rowsPerSecondMedian": 10.14,
+    "jobE2ESecondsMedian": 21.485,
+    "rowLatencyP95MsMedian": 26071.2
+  },
+  "metrics": {
+    "DuplicatesSkipped": 0,
+    "TxConflictRetries": 1338.0,
+    "RowSystemFailures": 2.0,
+    "workerInvocations": 5984.0,
+    "workerConcurrentMax": [
+      {
+        "t": "2026-10-23T22:17:00-07:00",
+        "Maximum": 7.0
+      },
+      {
+        "t": "2026-10-23T22:20:00-07:00",
+        "Maximum": 1.0
+      },
+      {
+        "t": "2026-10-23T22:21:00-07:00",
+        "Maximum": 5.0
+      },
+      {
+        "t": "2026-10-23T22:24:00-07:00",
+        "Maximum": 1.0
+      },
+      {
+        "t": "2026-10-23T22:25:00-07:00",
+        "Maximum": 5.0
+      }
+    ],
+    "workQueueOldestAge": [
+      {
+        "t": "2026-10-23T22:16:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T22:17:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T22:18:00-07:00",
+        "Maximum": 55.0
+      },
+      {
+        "t": "2026-10-23T22:19:00-07:00",
+        "Maximum": 115.0
+      },
+      {
+        "t": "2026-10-23T22:20:00-07:00",
+        "Maximum": 176.0
+      },
+      {
+        "t": "2026-10-23T22:21:00-07:00",
+        "Maximum": 8.0
+      },
+      {
+        "t": "2026-10-23T22:22:00-07:00",
+        "Maximum": 47.0
+      },
+      {
+        "t": "2026-10-23T22:23:00-07:00",
+        "Maximum": 85.0
+      },
+      {
+        "t": "2026-10-23T22:24:00-07:00",
+        "Maximum": 175.0
+      },
+      {
+        "t": "2026-10-23T22:25:00-07:00",
+        "Maximum": 187.0
+      },
+      {
+        "t": "2026-10-23T22:26:00-07:00",
+        "Maximum": 0.0
+      }
+    ]
+  }
+}
