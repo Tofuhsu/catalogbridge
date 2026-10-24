@@ -15,7 +15,7 @@ import time
 
 from shared import faults, obs, rules, schema
 from shared.aws import client, jobs_table
-from shared.ddbutil import get_job, is_conditional_fail, now_ms
+from shared.ddbutil import get_job, is_conditional_fail, now_ms, retry_on_tx_conflict
 
 SEND_ATTEMPTS = 4
 
@@ -124,12 +124,13 @@ def dispatch(job_id: str, run_request_id: str, row_numbers=None, receive_count: 
             raise faults.InjectedFault(f"crash after dispatching {sent} rows")
 
     if row_numbers is None:
-        jobs_table().update_item(
+        # Workers are already updating this item in transactions: retry on conflict.
+        retry_on_tx_conflict(lambda: jobs_table().update_item(
             Key={"jobId": job_id},
             UpdateExpression="SET dispatchComplete = :true, dispatchedAt = :t, updatedAt = :t, dispatchAttempts = :n",
             ConditionExpression="runRequestId = :r",
             ExpressionAttributeValues={":true": True, ":t": now_ms(), ":r": run_request_id, ":n": receive_count},
-        )
+        ))
     obs.info("dispatch done", jobId=job_id, runRequestId=run_request_id, stage="dispatch", rows=sent,
              partial=row_numbers is not None, durationMs=int((time.time() - started) * 1000), attempt=receive_count)
     obs.metric("RowsDispatched", sent)

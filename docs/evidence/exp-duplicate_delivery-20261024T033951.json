@@ -1,0 +1,63 @@
+{
+  "experiment": "duplicate_delivery",
+  "jobId": "18aa1402-1d42-5e4f-a8f9-0824da9f708b",
+  "startedAt": "2026-10-24T03:39:51.829174+00:00",
+  "injected": "500 duplicate work messages (new messageIds, same business keys)",
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 23.084,
+    "dispatchAttempts": 1,
+    "reportKey": "reports/18aa1402-1d42-5e4f-a8f9-0824da9f708b/008a51f0-cfbb-4d46-9c9b-b1d8780ba0ae/catalogbridge.v1.csv"
+  },
+  "metrics": {
+    "DuplicatesSkipped": 500.0,
+    "RowSystemFailures": 0,
+    "TxConflictRetries": 40.0,
+    "IngestFailures": 0,
+    "LifecycleFailures": 1.0,
+    "workerConcurrentExecutionsMax": [
+      {
+        "t": "2026-10-23T20:39:00-07:00",
+        "Maximum": 2.0
+      },
+      {
+        "t": "2026-10-23T20:41:00-07:00",
+        "Maximum": 3.0
+      }
+    ],
+    "workQueueOldestAgeMax": [
+      {
+        "t": "2026-10-23T20:39:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:40:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:41:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:42:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:43:00-07:00",
+        "Maximum": 0.0
+      }
+    ]
+  },
+  "alarmHistory": []
+}

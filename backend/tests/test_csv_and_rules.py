@@ -89,3 +89,26 @@ def test_formula_injection_neutralized():
     assert rules.csv_safe_text("=HYPERLINK(1)") == "'=HYPERLINK(1)"
     assert rules.csv_safe_text("@cmd") == "'@cmd"
     assert rules.csv_safe_text("Mug") == "Mug"
+
+
+def test_retry_on_tx_conflict_retries_then_succeeds():
+    from botocore.exceptions import ClientError
+    from shared.ddbutil import retry_on_tx_conflict
+    calls = {"n": 0}
+
+    def fn():
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise ClientError({"Error": {"Code": "TransactionConflictException", "Message": "x"}}, "UpdateItem")
+        return "ok"
+    assert retry_on_tx_conflict(fn) == "ok" and calls["n"] == 3
+
+
+def test_retry_on_tx_conflict_does_not_hide_other_errors():
+    from botocore.exceptions import ClientError
+    from shared.ddbutil import retry_on_tx_conflict
+
+    def fn():
+        raise ClientError({"Error": {"Code": "ConditionalCheckFailedException", "Message": "x"}}, "UpdateItem")
+    with pytest.raises(ClientError):
+        retry_on_tx_conflict(fn)

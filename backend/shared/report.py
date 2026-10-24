@@ -19,7 +19,7 @@ from boto3.dynamodb.conditions import Key
 
 from shared import faults, obs, rules, schema
 from shared.aws import client, jobs_table, results_table
-from shared.ddbutil import as_int, get_job, is_conditional_fail, now_ms
+from shared.ddbutil import as_int, get_job, is_conditional_fail, now_ms, retry_on_tx_conflict
 
 
 class ReportError(Exception):
@@ -76,14 +76,14 @@ def finalize(job_id: str) -> str:
         if not (job.get("dispatchComplete") and as_int(job.get("processedCount")) == as_int(job.get("expectedCount"))):
             return "not_ready"
         try:
-            jobs_table().update_item(
+            retry_on_tx_conflict(lambda: jobs_table().update_item(
                 Key={"jobId": job_id},
                 UpdateExpression="SET #s = :rep, reportingStartedAt = :t, updatedAt = :t",
                 ConditionExpression="#s = :p AND dispatchComplete = :true AND processedCount = expectedCount",
                 ExpressionAttributeNames={"#s": "status"},
                 ExpressionAttributeValues={":rep": schema.REPORTING, ":p": schema.PROCESSING,
                                            ":true": True, ":t": now_ms()},
-            )
+            ))
         except Exception as e:
             if not is_conditional_fail(e):
                 raise
@@ -118,14 +118,14 @@ def finalize(job_id: str) -> str:
     final = schema.COMPLETED if invalid == 0 else schema.COMPLETED_WITH_ERRORS
     t = now_ms()
     try:
-        jobs_table().update_item(
+        retry_on_tx_conflict(lambda: jobs_table().update_item(
             Key={"jobId": job_id},
             UpdateExpression="SET #s = :f, outputKey = :o, errorsKey = :e, completedAt = :t, updatedAt = :t",
             ConditionExpression="#s = :rep",
             ExpressionAttributeNames={"#s": "status"},
             ExpressionAttributeValues={":f": final, ":o": keys["outputKey"], ":e": keys["errorsKey"],
                                        ":rep": schema.REPORTING, ":t": t},
-        )
+        ))
     except Exception as e:
         if not is_conditional_fail(e):
             raise

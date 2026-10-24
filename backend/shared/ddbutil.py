@@ -10,6 +10,27 @@ def now_ms() -> int:
     return int(time.time() * 1000)
 
 
+def is_tx_conflict(e: Exception) -> bool:
+    return isinstance(e, ClientError) and e.response["Error"]["Code"] == "TransactionConflictException"
+
+
+def retry_on_tx_conflict(fn, attempts: int = 5):
+    """Run fn(); retry with jitter while a concurrent transaction holds the same item.
+
+    Non-transactional writes to the Job item conflict with in-flight worker
+    transactions on that item (observed in the duplicate-delivery experiment).
+    """
+    import random
+
+    for i in range(attempts):
+        try:
+            return fn()
+        except ClientError as e:
+            if not is_tx_conflict(e) or i == attempts - 1:
+                raise
+            time.sleep(random.uniform(0, 0.05 * (2 ** i)))
+
+
 def is_conditional_fail(e: Exception) -> bool:
     return isinstance(e, ClientError) and e.response["Error"]["Code"] == "ConditionalCheckFailedException"
 
