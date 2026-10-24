@@ -27,6 +27,8 @@ def urlopen(req, timeout=30):
     return urllib.request.urlopen(req, timeout=timeout, context=_SSL)
 
 REGION = os.environ.get("AWS_REGION", os.environ.get("AWS_DEFAULT_REGION", "us-west-2"))
+# botocore's `aws login` credential refresh creates a client without an explicit region.
+os.environ.setdefault("AWS_DEFAULT_REGION", REGION)
 STACK = os.environ.get("CB_STACK", "CatalogBridge")
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 EVIDENCE = os.path.join(ROOT, "docs", "evidence")

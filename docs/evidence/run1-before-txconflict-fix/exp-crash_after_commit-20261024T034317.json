@@ -1,0 +1,90 @@
+{
+  "experiment": "crash_after_commit",
+  "jobId": "66e35e78-eba5-5b16-9dda-3cc372a4bcb0",
+  "startedAt": "2026-10-24T03:43:17.388193+00:00",
+  "injected": "commit succeeds, then the invocation reports failure for rows [3, 50, 120, 333, 499] on first receive",
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 364.719,
+    "dispatchAttempts": 2,
+    "reportKey": "reports/66e35e78-eba5-5b16-9dda-3cc372a4bcb0/da8208d0-5384-4bd7-b038-2d47f68a5be0/catalogbridge.v1.csv"
+  },
+  "metrics": {
+    "DuplicatesSkipped": 505.0,
+    "RowSystemFailures": 5.0,
+    "TxConflictRetries": 56.0,
+    "IngestFailures": 1.0,
+    "LifecycleFailures": 0,
+    "workerConcurrentExecutionsMax": [
+      {
+        "t": "2026-10-23T20:44:00-07:00",
+        "Maximum": 2.0
+      },
+      {
+        "t": "2026-10-23T20:47:00-07:00",
+        "Maximum": 1.0
+      },
+      {
+        "t": "2026-10-23T20:50:00-07:00",
+        "Maximum": 3.0
+      }
+    ],
+    "workQueueOldestAgeMax": [
+      {
+        "t": "2026-10-23T20:43:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:44:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:45:00-07:00",
+        "Maximum": 58.0
+      },
+      {
+        "t": "2026-10-23T20:46:00-07:00",
+        "Maximum": 119.0
+      },
+      {
+        "t": "2026-10-23T20:47:00-07:00",
+        "Maximum": 119.0
+      },
+      {
+        "t": "2026-10-23T20:48:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:49:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:50:00-07:00",
+        "Maximum": 0.0
+      }
+    ]
+  },
+  "alarmHistory": [
+    {
+      "alarm": "catalogbridge-RowSystemFailures",
+      "t": "2026-10-23T20:51:57.977000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    },
+    {
+      "alarm": "catalogbridge-RowSystemFailures",
+      "t": "2026-10-23T20:45:57.929000-07:00",
+      "summary": "Alarm updated from OK to ALARM"
+    }
+  ]
+}

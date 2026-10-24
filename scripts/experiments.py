@@ -11,6 +11,7 @@ even when an experiment fails.
 
 import collections
 import json
+import os
 import subprocess
 import sys
 import time
@@ -80,6 +81,32 @@ def aws_metric_max(namespace, name, dims, start, end, stat="Maximum"):
     return [{"t": p["Timestamp"].isoformat(), stat: p[stat]} for p in sorted(r["Datapoints"], key=lambda p: p["Timestamp"])]
 
 
+def log_count(function_output_key, pattern, start_ms):
+    """Count log events matching a JSON filter pattern (per-job counts; metrics are global)."""
+    logs = aws("logs")
+    fn = outputs()[function_output_key]
+    group = aws("lambda").get_function_configuration(FunctionName=fn)["LoggingConfig"]["LogGroup"]
+    n, kw = 0, {"logGroupName": group, "filterPattern": pattern, "startTime": start_ms}
+    while True:
+        r = logs.filter_log_events(**kw)
+        n += len(r.get("events", []))
+        if not r.get("nextToken"):
+            return n
+        kw["nextToken"] = r["nextToken"]
+
+
+def per_job_counts(job_id, start_ms):
+    j = f'$.jobId = "{job_id}"'
+    return {
+        "workerDuplicateOutcomes": log_count("WorkerFunctionName", f'{{ {j} && $.outcome = "duplicate" }}', start_ms),
+        "workerCreatedOutcomes": log_count("WorkerFunctionName", f'{{ {j} && $.outcome = "created" }}', start_ms),
+        "workerRowFailures": log_count("WorkerFunctionName", f'{{ $.msg = "row failed; will be retried by SQS" }}', start_ms),
+        "dispatchRuns": log_count("ImporterFunctionName", f'{{ {j} && $.msg = "dispatch done" }}', start_ms),
+        "ingestFailures": log_count("ImporterFunctionName", '{ $.msg = "ingest message failed; will be retried" }', start_ms),
+        "lifecycleFailures": log_count("LifecycleFunctionName", '{ $.msg = "stream record failed; checkpointing before it" }', start_ms),
+    }
+
+
 def alarm_history(alarm_prefix, start):
     cw = aws("cloudwatch")
     out = []
@@ -147,14 +174,24 @@ def exp_permanent_failure_and_redrive(api):
         time.sleep(10)
     seconds_to_dlq = round(time.time() - t0)
     before = consistency(job_id)
-    # Wait for the alarm to evaluate so we can record it, then fix + redrive.
-    time.sleep(120)
+    # Do not fix anything until the operator would have been alerted: wait for the
+    # DLQ alarm to reach ALARM (SQS metrics arrive with a few minutes of delay).
+    cw = aws("cloudwatch")
+    t1 = time.time()
+    alarm_state = None
+    while time.time() - t1 < 900:
+        alarm_state = cw.describe_alarms(AlarmNames=["catalogbridge-WorkDLQNotEmpty"])["MetricAlarms"][0]["StateValue"]
+        if alarm_state == "ALARM":
+            break
+        time.sleep(20)
+    seconds_dlq_to_alarm = round(time.time() - t1)
     set_faults({})
-    out = subprocess.run([sys.executable, "scripts/recover.py", "redrive", "work", "--max", "10"],
+    out = subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "recover.py"), "redrive", "work", "--max", "10"],
                          capture_output=True, text=True)
     wait_terminal(api, job_id, timeout=600)
     return job_id, {"injected": "rows 5 and 250 always fail with a system error (maxReceiveCount=3)",
                     "secondsUntilBothInDLQ": seconds_to_dlq, "stateWhileInDLQ": before,
+                    "dlqAlarmState": alarm_state, "secondsFromDLQToAlarm": seconds_dlq_to_alarm,
                     "redriveOutput": out.stdout.strip()}
 
 
@@ -184,8 +221,24 @@ EXPERIMENTS = {
 }
 
 
+def wait_idle(max_s=900):
+    """Start each experiment from empty queues so windows do not mix."""
+    sqs = aws("sqs")
+    t0 = time.time()
+    while time.time() - t0 < max_s:
+        busy = 0
+        for k in ("WorkQueueUrl", "IngestQueueUrl"):
+            a = sqs.get_queue_attributes(QueueUrl=outputs()[k], AttributeNames=[
+                "ApproximateNumberOfMessages", "ApproximateNumberOfMessagesNotVisible"])["Attributes"]
+            busy += int(a["ApproximateNumberOfMessages"]) + int(a["ApproximateNumberOfMessagesNotVisible"])
+        if busy == 0:
+            return
+        time.sleep(10)
+
+
 def run_one(name, api):
-    start = datetime.now(timezone.utc) - timedelta(minutes=1)
+    wait_idle()
+    start = datetime.now(timezone.utc)
     try:
         job_id, info = EXPERIMENTS[name](api)
     finally:
@@ -196,6 +249,8 @@ def run_one(name, api):
     ev = {
         "experiment": name, "jobId": job_id, "startedAt": start.isoformat(), **info,
         "result": consistency(job_id),
+        "perJobFromLogs": per_job_counts(job_id, int(start.timestamp() * 1000)),
+        "metricsNote": "CloudWatch metric sums below are global for the time window (may include other jobs); perJobFromLogs is job-scoped except failure counts, which are window-scoped.",
         "metrics": {
             "DuplicatesSkipped": metric_sum("DuplicatesSkipped", "WorkerFn", start, end),
             "RowSystemFailures": metric_sum("RowSystemFailures", "WorkerFn", start, end),

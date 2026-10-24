@@ -1,0 +1,91 @@
+{
+  "experiment": "crash_mid_dispatch",
+  "jobId": "023a4cb1-6826-5315-9eda-b3548ed9796d",
+  "startedAt": "2026-10-24T03:51:02.545872+00:00",
+  "injected": "dispatcher raises after 200 of 500 rows on the first attempt",
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 378.71,
+    "dispatchAttempts": 2,
+    "reportKey": "reports/023a4cb1-6826-5315-9eda-b3548ed9796d/c118172e-5a12-48b5-b822-785e85b6b48c/catalogbridge.v1.csv"
+  },
+  "metrics": {
+    "DuplicatesSkipped": 200.0,
+    "RowSystemFailures": 0,
+    "TxConflictRetries": 46.0,
+    "IngestFailures": 1.0,
+    "LifecycleFailures": 0,
+    "workerConcurrentExecutionsMax": [
+      {
+        "t": "2026-10-23T20:52:00-07:00",
+        "Maximum": 2.0
+      },
+      {
+        "t": "2026-10-23T20:58:00-07:00",
+        "Maximum": 2.0
+      }
+    ],
+    "workQueueOldestAgeMax": [
+      {
+        "t": "2026-10-23T20:51:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:52:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:53:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:54:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:55:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:56:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:57:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T20:58:00-07:00",
+        "Maximum": 9.0
+      }
+    ]
+  },
+  "alarmHistory": [
+    {
+      "alarm": "catalogbridge-IngestQueueOldestAge",
+      "t": "2026-10-23T20:53:41.829000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    },
+    {
+      "alarm": "catalogbridge-IngestQueueOldestAge",
+      "t": "2026-10-23T20:52:41.828000-07:00",
+      "summary": "Alarm updated from OK to ALARM"
+    },
+    {
+      "alarm": "catalogbridge-RowSystemFailures",
+      "t": "2026-10-23T20:51:57.977000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "experiment": "permanent_failure_and_redrive",
+  "jobId": "9fe18cc3-10ed-5452-8b8c-7639be4f2632",
+  "injected": "rows 5 and 250 always fail with a system error (worker.fail_rows); WorkQueue maxReceiveCount=3",
+  "procedure": "The automated runner stopped mid-experiment (local credential refresh bug in the script, fixed). Recovery below was then performed by hand with the runbook: recover.py status -> inspect -> peek work -> faults cleared (cause fixed) -> recover.py redrive work --max 10.",
+  "stateWhileInDLQ": {
+    "status": "PROCESSING",
+    "expectedCount": 500,
+    "processedCount": 498,
+    "validCount": 498,
+    "invalidCount": 0,
+    "resultsRows": 498,
+    "distinctRows": 498,
+    "resultsValid": 498,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 498
+    },
+    "endToEndSeconds": null,
+    "dispatchAttempts": 1,
+    "reportKey": null
+  },
+  "redriveOutput": "redrove 2 message(s) from work DLQ",
+  "secondsFromRedriveToTerminal": 2.3,
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 599.181,
+    "dispatchAttempts": 1,
+    "reportKey": "reports/9fe18cc3-10ed-5452-8b8c-7639be4f2632/5ce93f07-b4a8-4070-9b80-2b38241ea470/catalogbridge.v1.csv"
+  },
+  "perJobFromLogs": {
+    "workerDuplicateOutcomes": 0,
+    "workerCreatedOutcomes": 500,
+    "workerRowFailures": 6,
+    "dispatchRuns": 1,
+    "ingestFailures": 0,
+    "lifecycleFailures": 0
+  },
+  "alarmHistory": [
+    {
+      "alarm": "catalogbridge-IngestQueueOldestAge",
+      "t": "2026-10-23T21:01:41.828000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    },
+    {
+      "alarm": "catalogbridge-IngestQueueOldestAge",
+      "t": "2026-10-23T21:00:41.829000-07:00",
+      "summary": "Alarm updated from OK to ALARM"
+    },
+    {
+      "alarm": "catalogbridge-WorkQueueOldestAge",
+      "t": "2026-10-23T21:11:09.507000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    },
+    {
+      "alarm": "catalogbridge-WorkQueueOldestAge",
+      "t": "2026-10-23T21:07:09.503000-07:00",
+      "summary": "Alarm updated from OK to ALARM"
+    }
+  ]
+}
