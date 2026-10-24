@@ -25,7 +25,7 @@ export class Monitoring extends Construct {
     const alarm = (aid: string, metric: cw.IMetric, threshold: number, description: string,
       op = cw.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD) => {
       const a = new cw.Alarm(this, aid, {
-        metric, threshold, evaluationPeriods: 1, comparisonOperator: op,
+        alarmName: `catalogbridge-${aid}`, metric, threshold, evaluationPeriods: 1, comparisonOperator: op,
         treatMissingData: cw.TreatMissingData.NOT_BREACHING, alarmDescription: description,
       });
       a.addAlarmAction(action);

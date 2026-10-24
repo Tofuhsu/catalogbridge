@@ -13,3 +13,4 @@ infra/cdk.context.json
 evidence/raw-private/
 build/
 frontend/public/config.json
+cdk-outputs.json

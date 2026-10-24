@@ -1,0 +1,71 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.13' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Backend tests
+        working-directory: backend
+        run: |
+          pip install -q -r requirements-dev.txt
+          python -m pytest -q
+      - name: Frontend type-check, unit tests, build
+        working-directory: frontend
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - name: Infra build, template assertions, synth
+        working-directory: infra
+        env: { CDK_DEFAULT_ACCOUNT: '123456789012', CDK_DEFAULT_REGION: us-west-2 }
+        run: |
+          npm ci
+          npm run build
+          npm test
+          npx cdk synth --quiet -c alertEmail=ci@example.com
+      - uses: actions/upload-artifact@v4
+        with: { name: frontend-dist, path: frontend/dist, retention-days: 1 }
+
+  deploy:
+    # Only main pushes deploy. Uses GitHub OIDC -> IAM role; no AWS keys are stored in GitHub.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.AWS_DEPLOY_ROLE_ARN != ''
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - uses: actions/download-artifact@v4
+        with: { name: frontend-dist, path: frontend/dist }
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-west-2
+      - name: cdk deploy
+        working-directory: infra
+        run: |
+          npm ci
+          export CDK_DEFAULT_ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
+          export CDK_DEFAULT_REGION=us-west-2
+          npx cdk deploy CatalogBridge --require-approval never -c alertEmail="${{ vars.CB_ALERT_EMAIL }}"

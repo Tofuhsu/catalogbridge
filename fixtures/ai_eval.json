@@ -1,0 +1,56 @@
+{
+  "en_standard.csv": {
+    "sku": "SKU",
+    "title": "Title",
+    "price": "Price",
+    "stock": "Stock"
+  },
+  "zh_headers.csv": {
+    "sku": "商品編號",
+    "title": "商品名稱",
+    "price": "售價",
+    "stock": "庫存數量"
+  },
+  "synonyms.csv": {
+    "sku": "Item Code",
+    "title": "Product Name",
+    "price": "Unit Price",
+    "stock": "Qty Available"
+  },
+  "ambiguous.csv": {
+    "sku": "Code",
+    "title": "Name",
+    "price": [
+      "Amount",
+      null
+    ],
+    "stock": [
+      "Count",
+      null
+    ]
+  },
+  "missing_stock.csv": {
+    "sku": "sku",
+    "title": "name",
+    "price": "price",
+    "stock": null
+  },
+  "prompt_injection.csv": {
+    "sku": "sku",
+    "title": "title",
+    "price": "price",
+    "stock": "stock"
+  },
+  "unmappable.csv": {
+    "sku": null,
+    "title": null,
+    "price": null,
+    "stock": null
+  },
+  "mixed_errors.csv": {
+    "sku": "SKU",
+    "title": "Title",
+    "price": "Price",
+    "stock": "Stock"
+  }
+}

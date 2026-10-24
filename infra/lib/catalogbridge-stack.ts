@@ -351,6 +351,16 @@ export class CatalogBridgeStack extends Stack {
       supportedIdentityProviders: [cognito.UserPoolClientIdentityProvider.COGNITO],
     });
 
+    // Automation-only client for scripts/e2e.py and benchmarks: AdminInitiateAuth
+    // requires IAM admin credentials, so it is not reachable from the browser.
+    const testClient = userPool.addClient('AutomationClient', {
+      generateSecret: false,
+      authFlows: { adminUserPassword: true },
+      accessTokenValidity: Duration.hours(1),
+      idTokenValidity: Duration.hours(1),
+      refreshTokenValidity: Duration.days(1),
+    });
+
     // ------------------------------------------------------------ API
     const httpApi = new apigw.HttpApi(this, 'HttpApi', {
       corsPreflight: {
@@ -361,7 +371,7 @@ export class CatalogBridgeStack extends Stack {
       },
     });
     const authorizer = new apigwAuth.HttpJwtAuthorizer('Jwt', userPool.userPoolProviderUrl, {
-      jwtAudience: [client.userPoolClientId],
+      jwtAudience: [client.userPoolClientId, testClient.userPoolClientId],
     });
     const integration = new apigwInt.HttpLambdaIntegration('ApiIntegration', apiFn);
     const routes: Array<[apigw.HttpMethod, string]> = [
@@ -438,6 +448,7 @@ export class CatalogBridgeStack extends Stack {
     out('ApiUrl', httpApi.apiEndpoint);
     out('UserPoolId', userPool.userPoolId);
     out('UserPoolClientId', client.userPoolClientId);
+    out('AutomationClientId', testClient.userPoolClientId);
     out('CognitoDomain', `${domain.domainName}.auth.${this.region}.amazoncognito.com`);
     out('JobsTable', jobs.tableName);
     out('ResultsTable', results.tableName);
