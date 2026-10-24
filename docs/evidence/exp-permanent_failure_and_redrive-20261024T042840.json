@@ -1,0 +1,153 @@
+{
+  "experiment": "permanent_failure_and_redrive",
+  "jobId": "dde0a7d9-3b31-5f9e-853a-be1d9379dafd",
+  "startedAt": "2026-10-24T04:28:40.551761+00:00",
+  "injected": "rows 5 and 250 always fail with a system error (maxReceiveCount=3)",
+  "secondsUntilBothInDLQ": 564,
+  "stateWhileInDLQ": {
+    "status": "PROCESSING",
+    "expectedCount": 500,
+    "processedCount": 498,
+    "validCount": 498,
+    "invalidCount": 0,
+    "resultsRows": 498,
+    "distinctRows": 498,
+    "resultsValid": 498,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 498
+    },
+    "endToEndSeconds": null,
+    "dispatchAttempts": 1,
+    "reportKey": null
+  },
+  "dlqAlarmState": "ALARM",
+  "secondsFromDLQToAlarm": 183,
+  "redriveOutput": "redrove 2 message(s) from work DLQ",
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 759.13,
+    "dispatchAttempts": 1,
+    "reportKey": "reports/dde0a7d9-3b31-5f9e-853a-be1d9379dafd/6ecb8f4e-9d5f-4cdf-9d79-bf1291e23046/catalogbridge.v1.csv"
+  },
+  "perJobFromLogs": {
+    "workerDuplicateOutcomes": 0,
+    "workerCreatedOutcomes": 500,
+    "workerRowFailures": 6,
+    "dispatchRuns": 1,
+    "ingestFailures": 0,
+    "lifecycleFailures": 0
+  },
+  "metricsNote": "CloudWatch metric sums below are global for the time window (may include other jobs); perJobFromLogs is job-scoped except failure counts, which are window-scoped.",
+  "metrics": {
+    "DuplicatesSkipped": 0,
+    "RowSystemFailures": 6.0,
+    "TxConflictRetries": 54.0,
+    "IngestFailures": 0,
+    "LifecycleFailures": 0,
+    "workerConcurrentExecutionsMax": [
+      {
+        "t": "2026-10-23T21:28:00-07:00",
+        "Maximum": 2.0
+      },
+      {
+        "t": "2026-10-23T21:31:00-07:00",
+        "Maximum": 1.0
+      },
+      {
+        "t": "2026-10-23T21:34:00-07:00",
+        "Maximum": 1.0
+      },
+      {
+        "t": "2026-10-23T21:41:00-07:00",
+        "Maximum": 2.0
+      }
+    ],
+    "workQueueOldestAgeMax": [
+      {
+        "t": "2026-10-23T21:28:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T21:29:00-07:00",
+        "Maximum": 36.0
+      },
+      {
+        "t": "2026-10-23T21:30:00-07:00",
+        "Maximum": 36.0
+      },
+      {
+        "t": "2026-10-23T21:31:00-07:00",
+        "Maximum": 109.0
+      },
+      {
+        "t": "2026-10-23T21:32:00-07:00",
+        "Maximum": 216.0
+      },
+      {
+        "t": "2026-10-23T21:33:00-07:00",
+        "Maximum": 275.0
+      },
+      {
+        "t": "2026-10-23T21:34:00-07:00",
+        "Maximum": 334.0
+      },
+      {
+        "t": "2026-10-23T21:35:00-07:00",
+        "Maximum": 396.0
+      },
+      {
+        "t": "2026-10-23T21:36:00-07:00",
+        "Maximum": 455.0
+      },
+      {
+        "t": "2026-10-23T21:37:00-07:00",
+        "Maximum": 515.0
+      },
+      {
+        "t": "2026-10-23T21:38:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T21:39:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T21:40:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T21:41:00-07:00",
+        "Maximum": 0.0
+      }
+    ]
+  },
+  "alarmHistory": [
+    {
+      "alarm": "catalogbridge-WorkDLQNotEmpty",
+      "t": "2026-10-23T21:41:07.274000-07:00",
+      "summary": "Alarm updated from OK to ALARM"
+    },
+    {
+      "alarm": "catalogbridge-WorkQueueOldestAge",
+      "t": "2026-10-23T21:40:09.504000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    },
+    {
+      "alarm": "catalogbridge-WorkQueueOldestAge",
+      "t": "2026-10-23T21:36:09.504000-07:00",
+      "summary": "Alarm updated from OK to ALARM"
+    }
+  ]
+}

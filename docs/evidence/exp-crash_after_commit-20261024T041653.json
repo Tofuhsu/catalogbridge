@@ -1,0 +1,84 @@
+{
+  "experiment": "crash_after_commit",
+  "jobId": "7266030b-1e00-58da-a730-5617053e2400",
+  "startedAt": "2026-10-24T04:16:53.432288+00:00",
+  "injected": "commit succeeds, then the invocation reports failure for rows [3, 50, 120, 333, 499] on first receive",
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 12.882,
+    "dispatchAttempts": 1,
+    "reportKey": "reports/7266030b-1e00-58da-a730-5617053e2400/4cd93dc6-bab2-40ab-9885-0f106b7daf94/catalogbridge.v1.csv"
+  },
+  "perJobFromLogs": {
+    "workerDuplicateOutcomes": 0,
+    "workerCreatedOutcomes": 495,
+    "workerRowFailures": 5,
+    "dispatchRuns": 1,
+    "ingestFailures": 0,
+    "lifecycleFailures": 0
+  },
+  "metricsNote": "CloudWatch metric sums below are global for the time window (may include other jobs); perJobFromLogs is job-scoped except failure counts, which are window-scoped.",
+  "metrics": {
+    "DuplicatesSkipped": 0,
+    "RowSystemFailures": 5.0,
+    "TxConflictRetries": 47.0,
+    "IngestFailures": 0,
+    "LifecycleFailures": 0,
+    "workerConcurrentExecutionsMax": [
+      {
+        "t": "2026-10-23T21:17:00-07:00",
+        "Maximum": 2.0
+      }
+    ],
+    "workQueueOldestAgeMax": [
+      {
+        "t": "2026-10-23T21:16:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-23T21:17:00-07:00",
+        "Maximum": 20.0
+      }
+    ]
+  },
+  "alarmHistory": [],
+  "postDrainCheck": {
+    "note": "Re-counted after the 5 crashed messages were redelivered (visibility timeout 180 s).",
+    "perJobFromLogs": {
+      "workerDuplicateOutcomes": 5,
+      "workerCreatedOutcomes": 495,
+      "workerRowFailures": 5,
+      "dispatchRuns": 1,
+      "ingestFailures": 1,
+      "lifecycleFailures": 0
+    },
+    "result": {
+      "status": "COMPLETED",
+      "expectedCount": 500,
+      "processedCount": 500,
+      "validCount": 500,
+      "invalidCount": 0,
+      "resultsRows": 500,
+      "distinctRows": 500,
+      "resultsValid": 500,
+      "countersMatchResults": true,
+      "resultReceiveCountHistogram": {
+        "1": 500
+      },
+      "endToEndSeconds": 12.882,
+      "dispatchAttempts": 1,
+      "reportKey": "reports/7266030b-1e00-58da-a730-5617053e2400/4cd93dc6-bab2-40ab-9885-0f106b7daf94/catalogbridge.v1.csv"
+    }
+  }
+}
