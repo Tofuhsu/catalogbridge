@@ -1,3 +1,4 @@
 boto3
 moto[dynamodb,s3,sqs,ssm]>=5.2
 pytest>=8
+certifi

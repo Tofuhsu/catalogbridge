@@ -6,6 +6,7 @@ Stack outputs are read from CloudFormation, so scripts need no hard-coded resour
 import json
 import os
 import secrets
+import ssl
 import string
 import time
 import urllib.error
@@ -14,6 +15,16 @@ import uuid
 from functools import lru_cache
 
 import boto3
+
+try:  # python.org macOS builds ship without a CA bundle
+    import certifi
+    _SSL = ssl.create_default_context(cafile=certifi.where())
+except ImportError:
+    _SSL = ssl.create_default_context()
+
+
+def urlopen(req, timeout=30):
+    return urllib.request.urlopen(req, timeout=timeout, context=_SSL)
 
 REGION = os.environ.get("AWS_REGION", os.environ.get("AWS_DEFAULT_REGION", "us-west-2"))
 STACK = os.environ.get("CB_STACK", "CatalogBridge")
@@ -87,7 +98,7 @@ class Api:
                                      data=json.dumps(body).encode() if body is not None else None,
                                      headers={"Authorization": f"Bearer {self.token}", "Content-Type": "application/json"})
         try:
-            with urllib.request.urlopen(req, timeout=30) as r:
+            with urlopen(req, timeout=30) as r:
                 return r.status, json.loads(r.read() or b"{}")
         except urllib.error.HTTPError as e:
             return e.code, json.loads(e.read() or b"{}")
@@ -103,7 +114,7 @@ class Api:
         req = urllib.request.Request(form["url"], data=b"".join(parts), method="POST",
                                      headers={"Content-Type": f"multipart/form-data; boundary={boundary}"})
         try:
-            with urllib.request.urlopen(req, timeout=30) as r:
+            with urlopen(req, timeout=30) as r:
                 return r.status
         except urllib.error.HTTPError as e:
             return e.code

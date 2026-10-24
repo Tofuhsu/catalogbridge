@@ -29,6 +29,8 @@ def test_presigned_post_is_size_limited_and_key_bound(aws):
     policy = json.loads(__import__("base64").b64decode(o["upload"]["fields"]["policy"]))
     assert ["content-length-range", 1, 1048576] in policy["conditions"]
     assert o["upload"]["fields"]["key"] == f"raw/{A}/{o['job']['jobId']}/input.csv"
+    # regional endpoint: the global one 307-redirects for new buckets (seen in the first deploy)
+    assert o["upload"]["url"].startswith("https://raw-bucket.s3.us-west-2.amazonaws.com")
 
 
 def test_user_b_cannot_see_or_touch_user_a_job(aws):

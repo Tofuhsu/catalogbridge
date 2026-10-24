@@ -14,7 +14,7 @@ import urllib.error
 import urllib.request
 import uuid
 
-from cb import STD, TestUser, fixture, outputs, save_evidence
+from cb import STD, TestUser, fixture, outputs, save_evidence, urlopen
 
 checks = []
 
@@ -25,7 +25,7 @@ def check(name, ok, **detail):
 
 
 def download(url) -> bytes:
-    with urllib.request.urlopen(url, timeout=30) as r:
+    with urlopen(url, timeout=30) as r:
         return r.read()
 
 
@@ -122,7 +122,7 @@ def main():
         check("user B lists none of A's jobs/templates", b_jobs == [] and b_tpl == [])
         raw_url = f"https://{outputs()['RawBucket']}.s3.amazonaws.com/raw/"
         try:
-            urllib.request.urlopen(raw_url, timeout=10)
+            urlopen(raw_url, timeout=10)
             public = True
         except urllib.error.HTTPError as e:
             public = e.code not in (403,)
@@ -131,7 +131,7 @@ def main():
         import urllib.request as ur
         req = ur.Request(outputs()["ApiUrl"] + "/jobs")
         try:
-            ur.urlopen(req, timeout=10)
+            urlopen(req, timeout=10)
             unauth = 200
         except urllib.error.HTTPError as e:
             unauth = e.code
