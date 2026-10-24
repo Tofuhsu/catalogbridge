@@ -61,6 +61,11 @@ def parse_csv(data: bytes) -> dict:
 
     header = [h.strip() for h in records[0]]
     reasons = []
+    if len(header) > schema.MAX_COLUMNS:
+        reasons.append(f"File has {len(header)} columns; the limit is {schema.MAX_COLUMNS}.")
+    long_names = [h[:20] + "..." for h in header if len(h) > schema.MAX_HEADER_LEN]
+    if long_names:
+        reasons.append(f"Header name(s) longer than {schema.MAX_HEADER_LEN} characters: " + ", ".join(long_names[:5]) + ".")
     empty_cols = [str(i + 1) for i, h in enumerate(header) if h == ""]
     if empty_cols:
         reasons.append("Header has empty column name(s) at position " + ", ".join(empty_cols) + ".")

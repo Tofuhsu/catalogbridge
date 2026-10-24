@@ -10,6 +10,8 @@ RULES_VERSION = "rules.v1"
 MAX_FILE_BYTES = 1_048_576  # 1 MiB
 MAX_DATA_ROWS = 500
 PREVIEW_ROWS = 20
+MAX_COLUMNS = 100
+MAX_HEADER_LEN = 128
 
 # Target fields the user maps source columns onto. currency is NOT mapped from a
 # column: it is a job-level setting (no exchange-rate conversion).
