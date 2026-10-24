@@ -12,3 +12,4 @@ infra/cdk.context.json
 .DS_Store
 evidence/raw-private/
 build/
+frontend/public/config.json
