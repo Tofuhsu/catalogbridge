@@ -14,6 +14,8 @@ let clientToken = newToken(); // reused if the user clicks twice or retries
 function pick(e: Event) {
   const f = (e.target as HTMLInputElement).files?.[0] ?? null;
   error.value = '';
+  // Checked before creating the job so a refused upload never leaves a CREATED job behind.
+  if (f && f.size === 0) { error.value = 'File is empty.'; file.value = null; return; }
   if (f && f.size > 1_048_576) { error.value = 'File is larger than 1 MB.'; file.value = null; return; }
   file.value = f;
   clientToken = newToken();
