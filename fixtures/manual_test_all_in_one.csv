@@ -1,0 +1,17 @@
+﻿Brand,商品編號,Product Name,售價 (USD),庫存
+Acme,CB-001,"Ceramic Mug, Blue",12.50,30
+Acme,CB-002,"Tote Bag
+(Large)",8,12
+Acme,CB-003,=SUM(1+1),5.00,3
+Lumo,CB-004,桌燈,-3.00,5
+Lumo,,Pen Set,4.20,9
+Lumo,CB-006,Notebook A5,3.5,2.5
+Acme,cb-001,Duplicate Mug,12.50,1
+Acme,CB-008,Phone Stand,$9.99,4
+Acme,CB-009,Wool Socks,1.234,7
+Acme,CB-010,,2.00,1
+Acme,CB-011,"Say ""hi"" Card",1.00,100
+Acme,CB-012,Tea Sampler,0,0
+Acme,CB-013,@Candle,6.00,1000000001
+Acme,CB-014,Cutting Board,"1,000.00",2
+Acme,CB-015,USB-C Cable,9.90,50

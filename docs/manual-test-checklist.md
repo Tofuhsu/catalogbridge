@@ -76,3 +76,33 @@ Automated equivalents already pass (`scripts/e2e.py`); this list is the human ch
 ## H. Alerts (after confirming the SNS email)
 
 - [ ] H1. Ask for a test alarm email (operator sets an alarm state briefly) → email arrives.
+
+## I. All-in-one file: `fixtures/manual_test_all_in_one.csv`
+
+15 rows, BOM, Chinese + English headers in a non-standard order plus an unused `Brand` column.
+Verified on the live stack before handing over (6 valid / 9 invalid).
+
+- [ ] I1. Upload with supplier `acme`, currency USD → AWAITING_MAPPING, preview shows 15 rows,
+      Chinese headers readable, row 2 title on two lines.
+- [ ] I2. Map 商品編號→sku, Product Name→title, 售價 (USD)→price, 庫存→stock (leave Brand unused) → run.
+- [ ] I3. COMPLETED_WITH_ERRORS, **6 valid / 9 invalid**. Invalid rows:
+
+| Row | Problem shown |
+| --- | --- |
+| 4 | Price must not be negative |
+| 5 | SKU is required |
+| 6 | Stock must be a whole number |
+| 7 | SKU already appears in row 1 (`cb-001` vs `CB-001`: case-insensitive) |
+| 8 | Price must be a plain decimal number (`$9.99`) |
+| 9 | USD prices allow at most 2 decimal place(s) (`1.234`) |
+| 10 | Title is required |
+| 13 | Stock must be at most 1000000000 |
+| 14 | Price must be a plain decimal number (`1,000.00`) |
+
+- [ ] I4. Output CSV: rows 1, 2, 3, 11, 12, 15; `8` became `8.00`, `0` became `0.00`;
+      row 3 title is `'=SUM(1+1)`; row 2 keeps its line break; row 11 keeps its quotes.
+- [ ] I5. "Save as template" → new job with the same file → apply the template → 4 fields filled.
+- [ ] I6. Fix in the table: row 4 price `3.00`, row 5 SKU `CB-005`, row 6 stock `2`, row 7 SKU `CB-007`,
+      row 8 price `9.99`, row 9 price `1.23`, row 10 title `Pen Refill`, row 13 stock `1000`,
+      row 14 price `1000.00` → "Create corrected job" → run → **COMPLETED, 15 / 0**; the original job
+      still shows 6 / 9.

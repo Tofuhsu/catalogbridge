@@ -112,3 +112,24 @@ def test_retry_on_tx_conflict_does_not_hide_other_errors():
         raise ClientError({"Error": {"Code": "ConditionalCheckFailedException", "Message": "x"}}, "UpdateItem")
     with pytest.raises(ClientError):
         retry_on_tx_conflict(fn)
+
+
+def test_manual_all_in_one_fixture_expectations():
+    """Keeps docs/manual-test-checklist.md section I in sync with the real rules."""
+    import os
+    path = os.path.join(os.path.dirname(__file__), "..", "..", "fixtures", "manual_test_all_in_one.csv")
+    m = csvparse.parse_csv(open(path, "rb").read())
+    mapping = {"sku": "商品編號", "title": "Product Name", "price": "售價 (USD)", "stock": "庫存"}
+    projected = [(r["rowNumber"], rules.project_row(r["values"], m["headers"], mapping)) for r in m["rows"]]
+    dups = rules.find_duplicate_skus(projected)
+    outcome = {}
+    for n, src in projected:
+        norm, errs = rules.validate_row(src, "USD", dups.get(n))
+        outcome[n] = "VALID" if norm else ",".join(f"{e['field']}:{e['code']}" for e in errs)
+    assert m["hadBom"] and m["rowCount"] == 15
+    assert [n for n, v in outcome.items() if v == "VALID"] == [1, 2, 3, 11, 12, 15]
+    assert outcome[4] == "price:NEGATIVE" and outcome[5] == "sku:REQUIRED"
+    assert outcome[6] == "stock:BAD_FORMAT" and outcome[7] == "sku:DUPLICATE_SKU"
+    assert outcome[8] == "price:BAD_FORMAT" and outcome[9] == "price:TOO_PRECISE"
+    assert outcome[10] == "title:REQUIRED" and outcome[13] == "stock:TOO_LARGE"
+    assert outcome[14] == "price:BAD_FORMAT"
