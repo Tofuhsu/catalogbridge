@@ -39,6 +39,21 @@ const usedTwice = computed(() => {
 });
 const complete = computed(() => TARGETS.every((t) => mapping.value[t]) && usedTwice.value.length === 0);
 
+// Show what each chosen column actually contains, so a shifted mapping (e.g. sku <- Brand) is
+// visible before running. Added after the first real tester mapped every field one column off.
+function samples(col?: string): string {
+  if (!col) return '';
+  const i = headers.value.indexOf(col);
+  if (i < 0) return '';
+  return rows.value.slice(0, 3).map((r) => (r.values[i] ?? '').replace(/\s+/g, ' ').slice(0, 24) || '(empty)').join(' · ');
+}
+const skuRepeats = computed(() => {
+  const i = headers.value.indexOf(mapping.value.sku ?? '');
+  if (i < 0) return 0;
+  const vals = rows.value.map((r) => (r.values[i] ?? '').trim().toLowerCase()).filter((v) => v);
+  return vals.length - new Set(vals).size;
+});
+
 function setField(t: (typeof TARGETS)[number], v: string) {
   mapping.value = { ...mapping.value, [t]: v || undefined };
   source.value = 'manual';
@@ -142,11 +157,14 @@ async function run() {
               <option v-for="h in headers" :key="h" :value="h">{{ h }}</option>
             </select>
             <span v-if="mapping[t] && usedTwice.includes(mapping[t]!)" class="small" style="color: var(--red)"> used twice</span>
+            <div v-if="mapping[t]" class="muted small">e.g. {{ samples(mapping[t]) }}</div>
           </td>
         </tr>
         <tr><td><b>currency</b></td><td>{{ job.currency }} <span class="muted small">(job setting)</span></td></tr>
       </tbody>
     </table>
+    <div v-if="skuRepeats > 0" class="warn">The column chosen for sku repeats values in the preview ({{ skuRepeats }} repeat(s)).
+      SKUs should be unique: check that you picked the right column. Repeated SKUs become invalid rows.</div>
     <p v-if="aiInfo" class="muted small">AI: {{ aiInfo.modelId }}, {{ aiInfo.latencyMs }} ms. {{ aiInfo.notes }}
       <span v-if="aiInfo.dropped?.length"> Discarded: {{ aiInfo.dropped.join('; ') }}</span></p>
     <div v-if="msg" class="ok">{{ msg }}</div>
