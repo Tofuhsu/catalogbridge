@@ -21,7 +21,7 @@ import time
 
 from botocore.config import Config
 
-from shared import schema
+from shared import faults, schema
 from shared.aws import client
 
 PROMPT_VERSION = "mapping-prompt.v1"
@@ -65,6 +65,8 @@ def build_user_payload(headers, rows) -> str:
 
 def suggest(headers, rows) -> dict:
     model_id = os.environ.get("BEDROCK_MODEL_ID", "")
+    if faults.get("api").get("ai_unavailable"):
+        raise AiUnavailable("injected test fault: AI unavailable")
     if not model_id:
         raise AiUnavailable("AI suggestions are not configured.")
     body = {

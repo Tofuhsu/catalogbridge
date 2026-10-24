@@ -1,0 +1,36 @@
+{
+  "unavailable": {
+    "status": 503,
+    "error": {
+      "code": "AI_UNAVAILABLE",
+      "message": "AI suggestion is unavailable right now. You can map the columns manually.",
+      "details": null
+    }
+  },
+  "manualAfterUnavailable": {
+    "status": "COMPLETED",
+    "valid": 20,
+    "invalid": 0,
+    "mappingSource": "manual"
+  },
+  "suggestionDoesNotRun": {
+    "suggestStatus": 503,
+    "suggestion": null,
+    "statusAfter": "AWAITING_MAPPING",
+    "runRequestId": null
+  },
+  "incompleteRunRefused": {
+    "status": 400,
+    "error": {
+      "code": "BAD_MAPPING",
+      "message": "Mapping is incomplete or invalid.",
+      "details": {
+        "problems": [
+          "Required field(s) not mapped: title, price, stock."
+        ]
+      }
+    }
+  },
+  "pass": false,
+  "note": "Steps 1 and 3 passed. Step 2 did NOT test 'a suggestion never runs by itself': the real Bedrock call failed with ResourceNotFoundException ('Model use case details have not been submitted for this account'), so the API returned 503 AI_UNAVAILABLE. That is a real (not injected) AI outage handled by the fallback path; logged by ApiFn at ts 1792813185107."
+}

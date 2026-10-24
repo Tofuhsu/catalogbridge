@@ -78,7 +78,7 @@ Only when deployed with `-c faultInjection=true`:
 .venv/bin/python scripts/faults.py clear
 ```
 
-Available: `worker.fail_rows`, `worker.crash_after_commit_rows`, `worker.slow_ms`,
+Available: `api.ai_unavailable`, `worker.fail_rows`, `worker.crash_after_commit_rows`, `worker.slow_ms`,
 `importer.crash_after_sent`, `lifecycle.crash_after_report_write`. Always `clear` afterwards.
 
 ## CI/CD setup (once)
