@@ -1,0 +1,12 @@
+deploy	Set up job	2026-10-24T04:54:56.3543982Z Download action repository 'aws-actions/configure-aws-credentials@v5' (SHA:61815dcd50bd041e203e49132bacad1fd04d2708)
+deploy	Run aws-actions/configure-aws-credentials@v5	﻿2026-10-24T04:54:59.0634738Z ##[group]Run aws-actions/configure-aws-credentials@v5
+deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0635155Z with:
+deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0635492Z   role-to-assume: arn:aws:iam::499499261617:role/catalogbridge-github-deploy
+deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0635901Z   aws-region: us-west-2
+deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0636166Z   audience: sts.amazonaws.com
+deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0636446Z   output-env-credentials: true
+deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0636711Z ##[endgroup]
+deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.2886867Z Assuming role with OIDC
+deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.5825431Z Authenticated as assumedRoleId AROAXITDZ32YT2VHNST6V:GitHubActions
+2026-10-24T04:55:36.7523514Z CatalogBridge: deploying... [1/1]
+2026-10-24T04:55:49.1866648Z ✨  Deployment time: 12.43s
