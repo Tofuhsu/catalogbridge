@@ -7,7 +7,7 @@
     "workerBatchSize": 10,
     "workerMaxConcurrency": 2,
     "workerBatchWindowSeconds": 0,
-    "faultInjection": "true",
+    "faultInjection": "false",
     "bedrockModelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
     "budgetUsd": 20,
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,

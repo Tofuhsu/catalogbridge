@@ -39,8 +39,10 @@ with a consistent read; any other cancellation (conflict, throttling, wrong job 
 retryable system failure.
 
 ## D7. Known hot spot: every row updates the same Job item
-Fine for 500 rows at low concurrency; transaction conflicts appear as concurrency rises (measured,
-see benchmark-results.md). Larger scale would need sharded counters, per-batch aggregation, or
+Fine for 500 rows at low concurrency. Measured: 228–307 conflict retries per 6,000 row-messages at
+max concurrency 2, 1,083–1,338 at 5, where 3 of 6 runs had a row exhaust its retries and wait for
+the 180 s visibility timeout (job tail ~200 s). The same hot spot also caused the
+`TransactionConflictException` bug on the Job's own status writes (fixed; failure-experiments.md). Larger scale would need sharded counters, per-batch aggregation, or
 completion tracking derived from Results instead of a single counter.
 
 ## D8. Business errors are results, system errors are retries
@@ -65,7 +67,8 @@ works with the boto3 bundled in the Lambda runtime (no extra dependency packagin
 
 ## D12. Fault injection is test-only
 Faults are read from an SSM parameter that exists only when deployed with
-`-c faultInjection=true`; there is no API to enable them. The final demo deployment sets it off.
+`-c faultInjection=true`; there is no API to enable them. Experiments ran with it on; the demo
+deployment has it off (2026-10-24).
 
 ## D13. Throughput settings are CDK context
 `workerBatchSize`, `workerMaxConcurrency`, `workerBatchWindowSeconds` are context values so each
@@ -87,3 +90,14 @@ MSK, EKS or EC2. Budgets update with delay, so the alert is a warning, not a kil
 GitHub Actions assumes an IAM role through OIDC; the trust policy allows only
 `repo:Tofuhsu/catalogbridge:ref:refs/heads/main`. The role can only assume the CDK bootstrap roles.
 No AWS access keys are stored in GitHub.
+
+## D17. Mapping UI shows sample values (from the first human test)
+The author's first browser test mapped every field one column off (sku <- Brand) and only saw it
+after running (1 valid / 14 invalid). The table now shows three sample values for each chosen
+column and warns when the sku column repeats in the preview. The server still validates everything;
+this only makes a wrong but valid mapping visible before it runs.
+
+## D18. Invite email lists one item per line
+With email as the sign-in attribute, Cognito's `{username}` is an internal ID, and a one-line body
+made the temporary password easy to mis-copy; the first tester could not sign in. The template now
+says to sign in with the email address and puts the password on its own line.

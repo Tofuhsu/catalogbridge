@@ -67,3 +67,15 @@ Not done yet:
 
 Known limits observed: account Lambda concurrency quota is 10 (no reserved concurrency possible);
 the author is signed in as the AWS root user (recommend an Identity Center admin user).
+
+## 2026-10-24
+
+- [x] Fault injection turned off for the demo deployment (`infra/cdk.json`), deployed by CI via OIDC.
+- [x] Pre-publication scan: no keys, tokens, passwords or personal email in the repo; the AWS account
+      ID in the CI log evidence was replaced with `<account-id>`. The repo is still private.
+- [x] Docs final pass: decisions D7 (measured hot spot), D12, D17 (mapping sample values), D18
+      (invite email); README known limits.
+- Local `aws login` session expired, so the AI evaluation and the cost check wait for the next
+  sign-in (plus the Bedrock use-case form).
+- Deferred on purpose (would need experiments re-run): shorter importer timeout; per-batch or
+  sharded counters for the Job hot spot.

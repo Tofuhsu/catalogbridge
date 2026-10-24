@@ -1,7 +1,7 @@
 deploy	Set up job	2026-10-24T04:54:56.3543982Z Download action repository 'aws-actions/configure-aws-credentials@v5' (SHA:61815dcd50bd041e203e49132bacad1fd04d2708)
 deploy	Run aws-actions/configure-aws-credentials@v5	﻿2026-10-24T04:54:59.0634738Z ##[group]Run aws-actions/configure-aws-credentials@v5
 deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0635155Z with:
-deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0635492Z   role-to-assume: arn:aws:iam::499499261617:role/catalogbridge-github-deploy
+deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0635492Z   role-to-assume: arn:aws:iam::<account-id>:role/catalogbridge-github-deploy
 deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0635901Z   aws-region: us-west-2
 deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0636166Z   audience: sts.amazonaws.com
 deploy	Run aws-actions/configure-aws-credentials@v5	2026-10-24T04:54:59.0636446Z   output-env-credentials: true

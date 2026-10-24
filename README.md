@@ -54,7 +54,8 @@ All numbers come from runs against the deployed stack; raw JSON is in [docs/evid
 | End-to-end product checks | [docs/evidence/](docs/evidence/) `e2e-*.json` |
 | Failure experiments | [docs/failure-experiments.md](docs/failure-experiments.md) |
 | Throughput / latency | [docs/benchmark-results.md](docs/benchmark-results.md) |
-| AI mapping evaluation | [docs/ai-mapping-eval.md](docs/ai-mapping-eval.md) |
+| AI mapping evaluation | [docs/ai-mapping-eval.md](docs/ai-mapping-eval.md) (not run yet; see file) |
+| Browser UI test | [docs/evidence/manual-ui-test-20261023.md](docs/evidence/manual-ui-test-20261023.md) |
 | User validation | [docs/user-validation.md](docs/user-validation.md) |
 | Operations | [docs/runbook.md](docs/runbook.md) |
 
@@ -73,7 +74,7 @@ docs/       architecture, decisions, experiments, benchmarks, runbook, evidence/
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r backend/requirements-dev.txt
-(cd backend && ../.venv/bin/python -m pytest -q)          # 51 tests, fake AWS (moto)
+(cd backend && ../.venv/bin/python -m pytest -q)          # 54 tests, fake AWS (moto)
 (cd frontend && npm ci && npm test && npm run build)
 (cd infra && npm ci && npm run build && npm test)          # CloudFormation template assertions
 ```
@@ -118,4 +119,9 @@ All routes require `Authorization: Bearer <Cognito ID token>`.
 - The dedup guarantee covers DynamoDB results and counters only, not external side effects.
 - The account's Lambda concurrency quota is 10, so reserved concurrency is not configured.
 - No Shopify adapter (not validated against a real store, so not claimed).
-- User validation so far uses synthetic data only (see [docs/user-validation.md](docs/user-validation.md)).
+- User validation so far: synthetic data plus the author's own browser test; no external users yet
+  (see [docs/user-validation.md](docs/user-validation.md)).
+- AI mapping quality has not been evaluated yet (Bedrock model access pending); manual mapping is
+  the verified path.
+- Recovery from a crash mid-dispatch takes ~6 min because the ingest queue visibility timeout is
+  360 s (measured); a shorter importer timeout would speed this up.

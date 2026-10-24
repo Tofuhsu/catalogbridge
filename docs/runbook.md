@@ -71,7 +71,9 @@ DynamoDB + the S3 manifest as the source of truth, so it works after stream reco
 
 ## Fault injection (test only)
 
-Only when deployed with `-c faultInjection=true`:
+The demo deployment has it **off** (`faultInjection: "false"` in `infra/cdk.json`, so CI deploys
+without it). For an experiment window, deploy with `scripts/deploy.sh -c faultInjection=true`, run the
+experiment, then redeploy without the flag. Commands while it is on:
 
 ```bash
 .venv/bin/python scripts/faults.py set '{"worker": {"fail_rows": [7]}}'
