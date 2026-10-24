@@ -33,19 +33,25 @@ Bugs found by running on real AWS (fixed):
    (SQS/stream retry + dedup) but completion was delayed ~6 min (visibility timeout). Fixed: retry
    with jitter on that error; experiments re-run to verify.
 
+Later the same day:
+- [x] Failure experiments run 2 (after the fix): 6/6 consistent; crash-after-commit 364.7 s -> 12.9 s;
+      DLQ alarm reached ALARM 183 s after messages hit the DLQ, then fix + redrive completed the job.
+      docs/failure-experiments.md
+- [x] GitHub OIDC deploy role deployed (author approved). First CI deploy failed: the repo uses
+      GitHub's immutable OIDC subject (`repo:owner@id/repo@id`); trust policy fixed; CI deploy
+      succeeded (run 40064143235, docs/evidence/ci-oidc-deploy-run-40064143235.log).
+- [x] Benchmarks: batch 1 vs 10 x max concurrency 2 vs 5, 3 runs x 2,000 rows each.
+      docs/benchmark-results.md. Concurrency 5 exposed the Job-item hot spot as ~200 s tail jobs.
+
 Blocked / waiting on the author:
-- Bedrock Anthropic "use case details" form must be submitted in the console before the AI
-  evaluation can run (Bedrock currently returns ResourceNotFoundException for Claude models).
-- GitHub OIDC deploy role (`CatalogBridgeCicd` stack) creates IAM resources; needs the author's
-  explicit go-ahead or to be run by the author.
-- SNS email subscription confirmation (click the link in the email).
+- Bedrock Anthropic "use case details" form (AI evaluation cannot run until then).
+- SNS email subscription still PendingConfirmation (alarms fire but cannot email).
+- A human sign-in through the Cognito Hosted UI in a browser has not been done yet.
+- Real user validation (none so far; synthetic only).
 
 Not done yet:
-- [ ] Failure experiments run 2 (after fix), incl. DLQ alarm observed before recovery.
-- [ ] Benchmark batch 1 vs 10, max concurrency 2 vs 5.
-- [ ] AI mapping evaluation on the fixed test set.
-- [ ] Real user validation (none so far; synthetic only).
-- [ ] Final docs with measured numbers; switch final demo deployment to faultInjection=false.
+- [ ] AI mapping evaluation on the fixed test set (docs/ai-mapping-eval.md says "not run").
+- [ ] Switch the final demo deployment to faultInjection=false (after the AI checks).
 
 Known limits observed: account Lambda concurrency quota is 10 (no reserved concurrency possible);
 the author is signed in as the AWS root user (recommend an Identity Center admin user).
