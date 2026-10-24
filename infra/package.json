@@ -9,7 +9,7 @@
     "build": "tsc",
     "synth": "cdk synth",
     "cdk": "cdk",
-    "test": "node --test test/"
+    "test": "node --test test/*.test.js"
   },
   "dependencies": {
     "aws-cdk-lib": "2.274.0",

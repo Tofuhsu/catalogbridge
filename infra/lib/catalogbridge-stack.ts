@@ -229,7 +229,7 @@ export class CatalogBridgeStack extends Stack {
       actions: ['bedrock:InvokeModel'],
       resources: [
         `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/${props.bedrockModelId}`,
-        'arn:aws:bedrock:*::foundation-model/anthropic.claude-haiku-4-5*',
+        'arn:aws:bedrock:*::foundation-model/anthropic.claude-haiku-*',
       ],
     }));
 

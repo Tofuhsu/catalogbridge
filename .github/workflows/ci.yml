@@ -17,11 +17,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with: { python-version: '3.13' }
-      - uses: actions/setup-node@v4
-        with: { node-version: '22' }
+      - uses: actions/setup-node@v5
+        with: { node-version: '24' }
       - name: Backend tests
         working-directory: backend
         run: |
@@ -41,7 +41,7 @@ jobs:
           npm run build
           npm test
           npx cdk synth --quiet -c alertEmail=ci@example.com
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with: { name: frontend-dist, path: frontend/dist, retention-days: 1 }
 
   deploy:
@@ -53,12 +53,12 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: '22' }
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: '24' }
+      - uses: actions/download-artifact@v5
         with: { name: frontend-dist, path: frontend/dist }
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-west-2
