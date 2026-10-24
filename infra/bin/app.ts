@@ -25,5 +25,6 @@ new CicdStack(app, 'CatalogBridgeCicd', {
   env,
   githubRepo: String(ctx('githubRepo')),
   githubBranch: String(ctx('githubBranch') ?? 'main'),
+  githubSubjectPrefix: ctx('githubSubjectPrefix') || undefined,
   existingOidcProviderArn: ctx('githubOidcProviderArn') || undefined,
 });

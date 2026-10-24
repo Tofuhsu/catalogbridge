@@ -5,6 +5,10 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 export interface CicdProps extends StackProps {
   githubRepo: string; // owner/name
   githubBranch: string;
+  /** `sub` prefix GitHub puts in the OIDC token. Repos using immutable subjects get
+   *  `repo:<owner>@<ownerId>/<repo>@<repoId>`; check with
+   *  `gh api repos/<owner>/<repo>/actions/oidc/customization/sub`. */
+  githubSubjectPrefix?: string;
   existingOidcProviderArn?: string;
 }
 
@@ -29,7 +33,7 @@ export class CicdStack extends Stack {
       assumedBy: new iam.WebIdentityPrincipal(provider.openIdConnectProviderArn, {
         StringEquals: {
           'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-          'token.actions.githubusercontent.com:sub': `repo:${props.githubRepo}:ref:refs/heads/${props.githubBranch}`,
+          'token.actions.githubusercontent.com:sub': `${props.githubSubjectPrefix ?? `repo:${props.githubRepo}`}:ref:refs/heads/${props.githubBranch}`,
         },
       }),
       description: 'Assumed by GitHub Actions (OIDC) to run cdk deploy for CatalogBridge',
