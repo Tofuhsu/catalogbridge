@@ -49,8 +49,12 @@ Human check (2026-10-23, by the author, not a target user):
       email is the sign-in attribute) and the author got "incorrect password"; template fixed and
       re-sent, then sign-in worked.
 - [x] One browser upload (117 rows) went through S3 -> EventBridge -> validation -> AWAITING_MAPPING.
-- [ ] The rest of the flow (mapping, run, download, corrected job) has no run recorded under the
-      author's account; it is verified only by the automated e2e script.
+- [x] Full browser UI pass in the author's signed-in session (docs/evidence/manual-ui-test-20261023.md):
+      mapping checks, templates, AI unavailable + limit, run, error table, corrected job (11/0), drop
+      rows, phone width. Not run: sign-out by the assistant, alert email (SNS unconfirmed).
+- [x] Usability fix from the author's test: they mapped every field one column off (sku <- Brand) and
+      only saw it after running (1 valid / 14 invalid). The mapping table now shows sample values and
+      warns when the sku column repeats.
 
 Blocked / waiting on the author:
 - Bedrock Anthropic "use case details" form (AI evaluation cannot run until then).
