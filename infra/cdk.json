@@ -1,0 +1,18 @@
+{
+  "app": "npx tsc && node build/bin/app.js",
+  "context": {
+    "stage": "dev",
+    "githubRepo": "Tofuhsu/catalogbridge",
+    "githubBranch": "main",
+    "workerBatchSize": 10,
+    "workerMaxConcurrency": 2,
+    "workerBatchWindowSeconds": 0,
+    "faultInjection": "true",
+    "bedrockModelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "budgetUsd": 20,
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "@aws-cdk/core:target-partitions": ["aws"]
+  }
+}

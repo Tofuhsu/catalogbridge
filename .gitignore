@@ -11,3 +11,4 @@ infra/cdk.context.json
 *.local
 .DS_Store
 evidence/raw-private/
+build/

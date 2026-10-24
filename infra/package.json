@@ -1,0 +1,23 @@
+{
+  "name": "catalogbridge-infra",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "infra": "bin/app.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "synth": "cdk synth",
+    "cdk": "cdk",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.274.0",
+    "constructs": "10.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "aws-cdk": "2.1146.1",
+    "typescript": "7.0.2"
+  }
+}
