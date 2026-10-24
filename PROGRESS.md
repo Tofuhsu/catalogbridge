@@ -43,10 +43,18 @@ Later the same day:
 - [x] Benchmarks: batch 1 vs 10 x max concurrency 2 vs 5, 3 runs x 2,000 rows each.
       docs/benchmark-results.md. Concurrency 5 exposed the Job-item hot spot as ~200 s tail jobs.
 
+Human check (2026-10-23, by the author, not a target user):
+- [x] Invited account signed in through the Cognito Hosted UI in a browser (user status CONFIRMED).
+      The first invite email was confusing (one-line body; {username} shows the internal ID because
+      email is the sign-in attribute) and the author got "incorrect password"; template fixed and
+      re-sent, then sign-in worked.
+- [x] One browser upload (117 rows) went through S3 -> EventBridge -> validation -> AWAITING_MAPPING.
+- [ ] The rest of the flow (mapping, run, download, corrected job) has no run recorded under the
+      author's account; it is verified only by the automated e2e script.
+
 Blocked / waiting on the author:
 - Bedrock Anthropic "use case details" form (AI evaluation cannot run until then).
 - SNS email subscription still PendingConfirmation (alarms fire but cannot email).
-- A human sign-in through the Cognito Hosted UI in a browser has not been done yet.
 - Real user validation (none so far; synthetic only).
 
 Not done yet:
