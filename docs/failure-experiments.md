@@ -79,6 +79,10 @@ runbook, which is also recorded.
   metrics arrive with delay); `catalogbridge-WorkQueueOldestAge` also alarmed. Only then was the
   cause removed and `recover.py redrive work --max 10` run: 2 messages moved back with their
   original bodies (same run identity), job COMPLETED, counters 500.
+- **Partial batch response, live:** rows 5 and 250 shared 10-message batches with healthy rows.
+  All 498 other rows were written on their first receive and the worker logged 0 `duplicate`
+  outcomes for the job, so batch-mates of the failing rows were not reprocessed: only the failed
+  message IDs went back to SQS.
 - **Not verified:** email delivery of the alarm. The SNS email subscription was still
   "PendingConfirmation" at that time, so the alarm fired but no email could be delivered.
 - **Run 1 (manual recovery):** the stuck job was found with `recover.py status` (498/500,
