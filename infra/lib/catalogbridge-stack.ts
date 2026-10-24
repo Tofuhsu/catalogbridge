@@ -329,7 +329,14 @@ export class CatalogBridgeStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
       userInvitation: {
         emailSubject: 'Your CatalogBridge test account',
-        emailBody: 'You were invited to try CatalogBridge (a demo project). Username: {username} Temporary password: {####} Sign in at ' + siteUrl,
+        // One item per line: a one-line body made the temporary password easy to mis-copy
+        // (reported by the first real tester).
+        emailBody: '<p>You were invited to try CatalogBridge (a demo project).</p>'
+          + '<p>Sign in with <b>the email address this message was sent to</b> (not the account ID below).</p>'
+          + '<p>Temporary password (copy exactly, every character counts):</p>'
+          + '<p><code style="font-size:16px">{####}</code></p>'
+          + `<p>Sign in at <a href="${siteUrl}">${siteUrl}</a>. You will be asked to choose a new password.</p>`
+          + '<p style="color:#667085">Account ID (support reference only): {username}</p>',
       },
     });
     const domain = userPool.addDomain('Domain', {
