@@ -8,7 +8,7 @@ entered credentials. Data: synthetic fixture `manual_test_all_in_one.csv` and th
 | --- | --- | --- |
 | A1 signed-out deep link → sign-in page | browser | PASS |
 | A2 sign in | author, browser | PASS (after invite-email fix) |
-| A3 sign out | not done by the assistant (it does not sign users out) | NOT RUN |
+| A3 sign out | author, browser (2026-10-25) | PASS (reported by the author) |
 | B1–B3 upload, BOM, Chinese headers, quoted newline | author's upload in browser; preview read | PASS |
 | B4 empty file, B5 >1 MB (client message) | browser file chooser not available to the assistant; server-side refusal verified by e2e; client check confirmed present in the deployed bundle | PARTIAL |
 | B6–B8 501 rows / duplicate header / not UTF-8 | live API e2e (`e2e-20261023T231307.json`) | PASS |
@@ -31,4 +31,4 @@ entered credentials. Data: synthetic fixture `manual_test_all_in_one.csv` and th
 | F2 double-click create | live API (same clientToken) | PASS |
 | F3 phone width 375 px | browser | PASS (no page side-scroll; tables scroll in their box) |
 | G isolation | live API with two users (8 routes → 404) | PASS |
-| H alert email | SNS subscription still PendingConfirmation | NOT RUN |
+| H alert email | author confirmed the SNS subscription (2026-10-25); operator set `catalogbridge-StalledJobs` to ALARM manually; it returned to OK on the next evaluation | PASS: SNS `NumberOfNotificationsDelivered` = 2 (ALARM + OK), `NumberOfNotificationsFailed` = 0 |

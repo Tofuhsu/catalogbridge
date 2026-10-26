@@ -84,8 +84,9 @@ runbook, which is also recorded.
   All 498 other rows were written on their first receive and the worker logged 0 `duplicate`
   outcomes for the job, so batch-mates of the failing rows were not reprocessed: only the failed
   message IDs went back to SQS.
-- **Not verified:** email delivery of the alarm. The SNS email subscription was still
-  "PendingConfirmation" at that time, so the alarm fired but no email could be delivered.
+- **Email delivery:** not verified during this experiment (the SNS email subscription was still
+  "PendingConfirmation"). Verified separately on 2026-10-25 after confirmation: a manual alarm
+  state change delivered 2 emails (ALARM + OK), 0 failed (manual-ui-test evidence, item H).
 - **Run 1 (manual recovery):** the stuck job was found with `recover.py status` (498/500,
   9 min without progress), `inspect` listed missing rows [5, 250], `peek work` showed both in the
   DLQ, the fault was cleared, `redrive` moved 2 messages, and the job completed 2.3 s later. The

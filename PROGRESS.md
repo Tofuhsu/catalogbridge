@@ -92,3 +92,7 @@ the author is signed in as the AWS root user (recommend an Identity Center admin
       history scanned first: no keys, tokens, passwords or personal email; the AWS account ID remains
       in one old commit of the CI log evidence (account IDs are not secret; history not rewritten).
       CI deploy stays limited to pushes on main, and the OIDC role trusts only this repo's main branch.
+- [x] SNS subscription confirmed by the author; test alarm delivered 2 emails (ALARM + OK), 0 failed.
+- [x] Sign-out (A3) done by the author in the browser.
+- Remaining items that only the author can do (real users, Identity Center admin, deleting test
+  data) are written up outside the repo with step-by-step instructions.
