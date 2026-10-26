@@ -88,3 +88,7 @@ the author is signed in as the AWS root user (recommend an Identity Center admin
       started a run, model latency median 1,565 ms (docs/ai-mapping-eval.md).
 - [x] Cost check: Budgets / Cost Explorer show US$0.00 month-to-date (estimated); see
       benchmark-results.md for the caveat.
+- [x] Repository made public (author's decision): https://github.com/Tofuhsu/catalogbridge. Full git
+      history scanned first: no keys, tokens, passwords or personal email; the AWS account ID remains
+      in one old commit of the CI log evidence (account IDs are not secret; history not rewritten).
+      CI deploy stays limited to pushes on main, and the OIDC role trusts only this repo's main branch.

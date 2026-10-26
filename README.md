@@ -4,6 +4,7 @@ Turn supplier product CSVs with different column names (English, Chinese, synony
 validated catalog file, with a row-level error report you can fix and re-run.
 
 - **Live demo (invited accounts only):** https://d394jsxt8i7q8r.cloudfront.net
+- **Source:** https://github.com/Tofuhsu/catalogbridge
 - **Status:** working MVP deployed on AWS (us-west-2). A demo/learning project, not a commercial
   service: no SLA, no real users yet, no market validation (see [Known limits](#known-limits)).
 - **AI-assisted:** code and docs were written with an AI coding assistant (Claude Code) and
