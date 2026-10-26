@@ -75,3 +75,8 @@ operations are ~500 SQS sends + ~500 receives/deletes (batched), ~500 DynamoDB t
 (2 items each), 50–500 worker invocations at 256 MB for well under a second each, and 2 S3 report
 puts. At on-demand list prices this is a small fraction of one US cent per job; the US$20 budget
 alarm is the real guardrail.
+
+Observed: on 2026-10-25, AWS Budgets and Cost Explorer reported US$0.00 month-to-date (marked
+estimated) after deployment, all experiments, the benchmarks and the AI evaluation. This is likely
+new-account free tier; Bedrock (Anthropic) usage is billed via AWS Marketplace and can appear later.
+Not a claim that the system runs for free.

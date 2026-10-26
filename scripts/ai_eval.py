@@ -33,6 +33,8 @@ def main():
                 print(name, "->", st, out.get("error", {}).get("code"))
                 continue
             sug = out["suggestion"]
+            # A suggestion must never start a run on its own.
+            status_after = api.call("GET", f"/jobs/{job_id}")[1]["job"]["status"]
             per = {}
             for t in TARGETS:
                 accepted = answer[t] if isinstance(answer[t], list) else [answer[t]]
@@ -45,7 +47,7 @@ def main():
                     per[t] = "wrong"
             rows.append({"fixture": name, "status": st, "suggested": sug["mapping"], "expected": answer, "perTarget": per,
                          "dropped": sug["dropped"], "notes": sug["notes"], "modelLatencyMs": sug["latencyMs"],
-                         "apiWallMs": wall_ms, "modelId": sug["modelId"]})
+                         "apiWallMs": wall_ms, "modelId": sug["modelId"], "jobStatusAfterSuggestion": status_after})
             print(f"{name:24s} {per}  {sug['latencyMs']} ms")
     graded = [r for r in rows if r.get("perTarget")]
     counts = {"correct": 0, "wrong": 0, "left_unmapped": 0}
@@ -55,7 +57,8 @@ def main():
     # Fields the user would have to change by hand before running.
     needs_edit = counts["wrong"] + counts["left_unmapped"]
     lat = sorted(r["modelLatencyMs"] for r in graded)
-    summary = {"fixtures": len(key), "graded": len(graded), "targetsGraded": 4 * len(graded), **counts,
+    summary = {"suggestionsThatStartedARun": sum(1 for r in graded if r["jobStatusAfterSuggestion"] != "AWAITING_MAPPING"),
+               "fixtures": len(key), "graded": len(graded), "targetsGraded": 4 * len(graded), **counts,
                "targetsNeedingManualChange": needs_edit, "calls": len(rows),
                "modelLatencyMs": {"min": lat[0], "median": lat[len(lat) // 2], "max": lat[-1]} if lat else None}
     path = save_evidence(f"ai-eval-{time.strftime('%Y%m%dT%H%M%S')}.json", {"summary": summary, "rows": rows})

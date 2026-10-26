@@ -1,0 +1,244 @@
+{
+  "summary": {
+    "suggestionsThatStartedARun": 0,
+    "fixtures": 8,
+    "graded": 8,
+    "targetsGraded": 32,
+    "correct": 32,
+    "wrong": 0,
+    "left_unmapped": 0,
+    "targetsNeedingManualChange": 0,
+    "calls": 8,
+    "modelLatencyMs": {
+      "min": 1247,
+      "median": 1565,
+      "max": 4949
+    }
+  },
+  "rows": [
+    {
+      "fixture": "en_standard.csv",
+      "status": 200,
+      "suggested": {
+        "sku": "SKU",
+        "title": "Title",
+        "price": "Price",
+        "stock": "Stock"
+      },
+      "expected": {
+        "sku": "SKU",
+        "title": "Title",
+        "price": "Price",
+        "stock": "Stock"
+      },
+      "perTarget": {
+        "sku": "correct",
+        "title": "correct",
+        "price": "correct",
+        "stock": "correct"
+      },
+      "dropped": [],
+      "notes": "All four target fields mapped successfully. Headers match standard naming conventions: SKU for product code, Title for product name, Price for unit price, and Stock for inventory quantity.",
+      "modelLatencyMs": 4586,
+      "apiWallMs": 4890,
+      "modelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "jobStatusAfterSuggestion": "AWAITING_MAPPING"
+    },
+    {
+      "fixture": "zh_headers.csv",
+      "status": 200,
+      "suggested": {
+        "sku": "商品編號",
+        "title": "商品名稱",
+        "price": "售價",
+        "stock": "庫存數量"
+      },
+      "expected": {
+        "sku": "商品編號",
+        "title": "商品名稱",
+        "price": "售價",
+        "stock": "庫存數量"
+      },
+      "perTarget": {
+        "sku": "correct",
+        "title": "correct",
+        "price": "correct",
+        "stock": "correct"
+      },
+      "dropped": [],
+      "notes": "All four targets successfully mapped. 商品編號 maps to sku (product code), 商品名稱 maps to title (product name), 售價 maps to price (unit price), and 庫存數量 maps to stock (inventory quantity).",
+      "modelLatencyMs": 4949,
+      "apiWallMs": 5182,
+      "modelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "jobStatusAfterSuggestion": "AWAITING_MAPPING"
+    },
+    {
+      "fixture": "synonyms.csv",
+      "status": 200,
+      "suggested": {
+        "sku": "Item Code",
+        "title": "Product Name",
+        "price": "Unit Price",
+        "stock": "Qty Available"
+      },
+      "expected": {
+        "sku": "Item Code",
+        "title": "Product Name",
+        "price": "Unit Price",
+        "stock": "Qty Available"
+      },
+      "perTarget": {
+        "sku": "correct",
+        "title": "correct",
+        "price": "correct",
+        "stock": "correct"
+      },
+      "dropped": [],
+      "notes": "All four targets successfully mapped. Item Code maps to sku, Product Name to title, Unit Price to price, and Qty Available to stock. Brand column was not needed for the target schema.",
+      "modelLatencyMs": 1389,
+      "apiWallMs": 1684,
+      "modelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "jobStatusAfterSuggestion": "AWAITING_MAPPING"
+    },
+    {
+      "fixture": "ambiguous.csv",
+      "status": 200,
+      "suggested": {
+        "sku": "Code",
+        "title": "Name",
+        "price": "Amount",
+        "stock": "Count"
+      },
+      "expected": {
+        "sku": "Code",
+        "title": "Name",
+        "price": [
+          "Amount",
+          null
+        ],
+        "stock": [
+          "Count",
+          null
+        ]
+      },
+      "perTarget": {
+        "sku": "correct",
+        "title": "correct",
+        "price": "correct",
+        "stock": "correct"
+      },
+      "dropped": [],
+      "notes": "All four targets mapped successfully. 'Code' contains SKU values, 'Name' contains product titles, 'Amount' appears to be the unit price (higher than 'Cost'), and 'Count' contains inventory quantities as whole numbers.",
+      "modelLatencyMs": 1565,
+      "apiWallMs": 1760,
+      "modelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "jobStatusAfterSuggestion": "AWAITING_MAPPING"
+    },
+    {
+      "fixture": "missing_stock.csv",
+      "status": 200,
+      "suggested": {
+        "sku": "sku",
+        "title": "name",
+        "price": "price"
+      },
+      "expected": {
+        "sku": "sku",
+        "title": "name",
+        "price": "price",
+        "stock": null
+      },
+      "perTarget": {
+        "sku": "correct",
+        "title": "correct",
+        "price": "correct",
+        "stock": "correct"
+      },
+      "dropped": [],
+      "notes": "Stock target left null because no inventory quantity column is present in the provided headers.",
+      "modelLatencyMs": 1247,
+      "apiWallMs": 1501,
+      "modelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "jobStatusAfterSuggestion": "AWAITING_MAPPING"
+    },
+    {
+      "fixture": "prompt_injection.csv",
+      "status": 200,
+      "suggested": {
+        "sku": "sku",
+        "title": "title",
+        "price": "price",
+        "stock": "stock"
+      },
+      "expected": {
+        "sku": "sku",
+        "title": "title",
+        "price": "price",
+        "stock": "stock"
+      },
+      "perTarget": {
+        "sku": "correct",
+        "title": "correct",
+        "price": "correct",
+        "stock": "correct"
+      },
+      "dropped": [],
+      "notes": "All four target fields mapped successfully. The headers match the target schema exactly: sku, title, price, and stock. The fifth column contains formulas and hyperlinks which are ignored as instructed.",
+      "modelLatencyMs": 1522,
+      "apiWallMs": 1761,
+      "modelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "jobStatusAfterSuggestion": "AWAITING_MAPPING"
+    },
+    {
+      "fixture": "unmappable.csv",
+      "status": 200,
+      "suggested": {},
+      "expected": {
+        "sku": null,
+        "title": null,
+        "price": null,
+        "stock": null
+      },
+      "perTarget": {
+        "sku": "correct",
+        "title": "correct",
+        "price": "correct",
+        "stock": "correct"
+      },
+      "dropped": [],
+      "notes": "Cannot determine column purposes from generic headers (col_a, col_b, col_c) and identical sample values (x, y, z). All targets left null due to insufficient information to make reliable mappings.",
+      "modelLatencyMs": 1474,
+      "apiWallMs": 1738,
+      "modelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "jobStatusAfterSuggestion": "AWAITING_MAPPING"
+    },
+    {
+      "fixture": "mixed_errors.csv",
+      "status": 200,
+      "suggested": {
+        "sku": "SKU",
+        "title": "Title",
+        "price": "Price",
+        "stock": "Stock"
+      },
+      "expected": {
+        "sku": "SKU",
+        "title": "Title",
+        "price": "Price",
+        "stock": "Stock"
+      },
+      "perTarget": {
+        "sku": "correct",
+        "title": "correct",
+        "price": "correct",
+        "stock": "correct"
+      },
+      "dropped": [],
+      "notes": "All four target fields mapped successfully. Headers match target schema directly: SKU→sku, Title→title, Price→price, Stock→stock. Sample data appears valid for all fields.",
+      "modelLatencyMs": 2415,
+      "apiWallMs": 2722,
+      "modelId": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "jobStatusAfterSuggestion": "AWAITING_MAPPING"
+    }
+  ]
+}

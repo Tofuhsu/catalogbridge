@@ -79,3 +79,12 @@ the author is signed in as the AWS root user (recommend an Identity Center admin
   sign-in (plus the Bedrock use-case form).
 - Deferred on purpose (would need experiments re-run): shorter importer timeout; per-batch or
   sharded counters for the Job hot spot.
+
+## 2026-10-25
+
+- [x] Anthropic use-case form submitted in the Bedrock console (the author approved every field; the
+      assistant filled it in the author's signed-in browser session). Bedrock access worked ~20 s later.
+- [x] AI mapping evaluation: 8 synthetic fixtures, 32/32 decisions matched the key, 0 suggestions
+      started a run, model latency median 1,565 ms (docs/ai-mapping-eval.md).
+- [x] Cost check: Budgets / Cost Explorer show US$0.00 month-to-date (estimated); see
+      benchmark-results.md for the caveat.
