@@ -175,3 +175,33 @@ def test_concurrent_same_row_only_one_creates(aws):
     item = build_result(msg, rec)
     assert commit(item) == "created"
     assert commit(dict(item, messageId="other")) == "duplicate"
+
+
+def test_group_commit_writes_rows_and_counter_once(aws):
+    job_id = happy(aws, n=10)
+    recs = work_records(aws)
+    from worker.handler import build_result, commit_group
+    items = [build_result(json.loads(r["body"]), r) for r in recs]
+    assert commit_group(items) is True
+    job = get_job_item(aws, job_id)
+    assert job["processedCount"] == 10 and results_count(aws, job_id) == 10
+    assert commit_group(items) is False  # all rows exist now: caller must fall back
+
+
+def test_batch_mixing_existing_and_new_rows_falls_back_without_double_count(aws):
+    job_id = happy(aws, n=10)
+    recs = work_records(aws)
+    assert run_worker(recs[:4]) == []  # rows 1-4 committed (e.g. before a crash)
+    redelivered = [dict(r, messageId=r["messageId"] + "-redelivered") for r in recs[:4]]
+    assert run_worker(redelivered + recs[4:], batch=10) == []  # one batch: 4 existing + 6 new
+    job = get_job_item(aws, job_id)
+    assert job["processedCount"] == 10 and results_count(aws, job_id) == 10
+
+
+def test_same_row_twice_in_one_batch(aws):
+    job_id = happy(aws, n=3)
+    recs = work_records(aws)
+    batch = recs + [dict(recs[0], messageId=recs[0]["messageId"] + "-dup")]
+    assert run_worker(batch, batch=10) == []
+    job = get_job_item(aws, job_id)
+    assert job["processedCount"] == 3 and results_count(aws, job_id) == 3

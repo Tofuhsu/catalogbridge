@@ -38,7 +38,7 @@ export interface CatalogBridgeProps extends StackProps {
 // cdk always runs from infra/, so the repo root is its parent.
 const REPO_ROOT = path.resolve(process.cwd(), '..');
 const WORKER_TIMEOUT_S = 30;
-const IMPORTER_TIMEOUT_S = 60;
+const IMPORTER_TIMEOUT_S = 30; // dispatch of 500 rows takes seconds; was 60 (recovery after a crash took ~6 min)
 
 export class CatalogBridgeStack extends Stack {
   constructor(scope: Construct, id: string, props: CatalogBridgeProps) {
