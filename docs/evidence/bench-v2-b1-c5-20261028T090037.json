@@ -1,0 +1,186 @@
+{
+  "label": "v2-b1-c5",
+  "config": {
+    "batchSize": 1,
+    "maxConcurrency": 5,
+    "batchingWindowS": 0,
+    "memoryMB": 256,
+    "timeoutS": 30,
+    "codeSha256": "9AzK6Ubic+cWNfckrhLmfQplOsUiPgJc5cov18PX73U=",
+    "runtime": "python3.13",
+    "arch": [
+      "arm64"
+    ]
+  },
+  "region": "us-west-2",
+  "startedAt": "2026-10-28T09:00:37.273706+00:00",
+  "note": "Run 1 may include cold starts; runs are sequential in one window.",
+  "runs": [
+    {
+      "jobs": 4,
+      "rows": 2000,
+      "clientWallSeconds": 33.45,
+      "rowsPerSecond_firstRunRequestToLastRow": 66.45,
+      "jobEndToEndSeconds": [
+        18.334,
+        31.104,
+        26.197,
+        10.458
+      ],
+      "rowLatencyMs": {
+        "p50": 15088.5,
+        "p95": 28340.25,
+        "max": 30028
+      },
+      "queueWaitMs": {
+        "p50": 13489.0,
+        "p95": 25651.8
+      },
+      "allConsistent": true,
+      "receiveCountHistogram": [
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        }
+      ]
+    },
+    {
+      "jobs": 4,
+      "rows": 2000,
+      "clientWallSeconds": 29.07,
+      "rowsPerSecond_firstRunRequestToLastRow": 78.32,
+      "jobEndToEndSeconds": [
+        26.307,
+        14.905,
+        15.532,
+        25.587
+      ],
+      "rowLatencyMs": {
+        "p50": 12816.0,
+        "p95": 24058.1,
+        "max": 25518
+      },
+      "queueWaitMs": {
+        "p50": 11894.5,
+        "p95": 22448.149999999998
+      },
+      "allConsistent": true,
+      "receiveCountHistogram": [
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        }
+      ]
+    },
+    {
+      "jobs": 4,
+      "rows": 2000,
+      "clientWallSeconds": 29.14,
+      "rowsPerSecond_firstRunRequestToLastRow": 73.96,
+      "jobEndToEndSeconds": [
+        28.176,
+        15.713,
+        27.608,
+        15.411
+      ],
+      "rowLatencyMs": {
+        "p50": 13936.0,
+        "p95": 25435.1,
+        "max": 27041
+      },
+      "queueWaitMs": {
+        "p50": 13168.0,
+        "p95": 24067.199999999997
+      },
+      "allConsistent": true,
+      "receiveCountHistogram": [
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        },
+        {
+          "1": 500
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "rowsPerSecond": [
+      66.45,
+      78.32,
+      73.96
+    ],
+    "rowsPerSecondMedian": 73.96,
+    "jobE2ESecondsMedian": 21.9605,
+    "rowLatencyP95MsMedian": 25435.1
+  },
+  "metrics": {
+    "DuplicatesSkipped": 0,
+    "TxConflictRetries": 1173.0,
+    "RowSystemFailures": 0,
+    "TxGroupCommits": 2.0,
+    "TxGroupFallbacks": 0,
+    "workerInvocations": 5990.0,
+    "workerConcurrentMax": [
+      {
+        "t": "2026-10-28T02:01:00-07:00",
+        "Maximum": 9.0
+      },
+      {
+        "t": "2026-10-28T02:02:00-07:00",
+        "Maximum": 5.0
+      },
+      {
+        "t": "2026-10-28T02:03:00-07:00",
+        "Maximum": 5.0
+      },
+      {
+        "t": "2026-10-28T02:04:00-07:00",
+        "Maximum": 5.0
+      }
+    ],
+    "workQueueOldestAge": [
+      {
+        "t": "2026-10-28T02:00:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T02:01:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T02:02:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T02:03:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T02:04:00-07:00",
+        "Maximum": 0.0
+      }
+    ]
+  }
+}
