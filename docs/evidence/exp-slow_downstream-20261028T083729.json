@@ -1,0 +1,75 @@
+{
+  "experiment": "slow_downstream",
+  "jobId": "7902d815-6486-5af6-b5d2-5e43b9827f9e",
+  "startedAt": "2026-10-28T08:37:29.405825+00:00",
+  "injected": "every worker batch sleeps 2 s (simulated slow dependency)",
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 70.869,
+    "dispatchAttempts": 1,
+    "reportKey": "reports/7902d815-6486-5af6-b5d2-5e43b9827f9e/e6ae43bb-7e7c-4beb-9e27-2114148d9ee5/catalogbridge.v1.csv"
+  },
+  "perJobFromLogs": {
+    "workerDuplicateOutcomes": 0,
+    "workerCreatedOutcomes": 500,
+    "workerRowFailures": 0,
+    "dispatchRuns": 1,
+    "ingestFailures": 0,
+    "lifecycleFailures": 0
+  },
+  "metricsNote": "CloudWatch metric sums below are global for the time window (may include other jobs); perJobFromLogs is job-scoped except failure counts, which are window-scoped.",
+  "metrics": {
+    "DuplicatesSkipped": 0,
+    "RowSystemFailures": 0,
+    "TxConflictRetries": 1.0,
+    "IngestFailures": 0,
+    "LifecycleFailures": 0,
+    "workerConcurrentExecutionsMax": [
+      {
+        "t": "2026-10-28T01:37:00-07:00",
+        "Maximum": 2.0
+      },
+      {
+        "t": "2026-10-28T01:38:00-07:00",
+        "Maximum": 2.0
+      }
+    ],
+    "workQueueOldestAgeMax": [
+      {
+        "t": "2026-10-28T01:37:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T01:38:00-07:00",
+        "Maximum": 45.0
+      },
+      {
+        "t": "2026-10-28T01:39:00-07:00",
+        "Maximum": 0.0
+      }
+    ]
+  },
+  "alarmHistory": [
+    {
+      "alarm": "catalogbridge-StalledJobs",
+      "t": "2026-10-28T01:38:22.935000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    },
+    {
+      "alarm": "catalogbridge-WorkDLQNotEmpty",
+      "t": "2026-10-28T01:37:44.070000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    }
+  ]
+}

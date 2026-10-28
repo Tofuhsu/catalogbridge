@@ -109,6 +109,8 @@ def main():
             "DuplicatesSkipped": metric_sum("DuplicatesSkipped", "WorkerFn", start, end),
             "TxConflictRetries": metric_sum("TxConflictRetries", "WorkerFn", start, end),
             "RowSystemFailures": metric_sum("RowSystemFailures", "WorkerFn", start, end),
+            "TxGroupCommits": metric_sum("TxGroupCommits", "WorkerFn", start, end),
+            "TxGroupFallbacks": metric_sum("TxGroupFallbacks", "WorkerFn", start, end),
             "workerInvocations": sum(d["Sum"] for d in aws_metric_max("AWS/Lambda", "Invocations",
                                                                       {"FunctionName": o["WorkerFunctionName"]}, start, end, "Sum")),
             "workerConcurrentMax": aws_metric_max("AWS/Lambda", "ConcurrentExecutions",

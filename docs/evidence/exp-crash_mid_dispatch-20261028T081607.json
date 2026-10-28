@@ -1,0 +1,78 @@
+{
+  "experiment": "crash_mid_dispatch",
+  "jobId": "9e3d701e-80ee-5198-89ba-42e43d84baa3",
+  "startedAt": "2026-10-28T08:16:07.629862+00:00",
+  "injected": "dispatcher raises after 200 of 500 rows on the first attempt",
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 192.769,
+    "dispatchAttempts": 2,
+    "reportKey": "reports/9e3d701e-80ee-5198-89ba-42e43d84baa3/dcece5b9-fc44-4c0a-8f5c-0e296ad5bf53/catalogbridge.v1.csv"
+  },
+  "perJobFromLogs": {
+    "workerDuplicateOutcomes": 200,
+    "workerCreatedOutcomes": 500,
+    "workerRowFailures": 0,
+    "dispatchRuns": 1,
+    "ingestFailures": 1,
+    "lifecycleFailures": 0
+  },
+  "metricsNote": "CloudWatch metric sums below are global for the time window (may include other jobs); perJobFromLogs is job-scoped except failure counts, which are window-scoped.",
+  "metrics": {
+    "DuplicatesSkipped": 200.0,
+    "RowSystemFailures": 0,
+    "TxConflictRetries": 4.0,
+    "IngestFailures": 1.0,
+    "LifecycleFailures": 0,
+    "workerConcurrentExecutionsMax": [
+      {
+        "t": "2026-10-28T01:16:00-07:00",
+        "Maximum": 2.0
+      },
+      {
+        "t": "2026-10-28T01:19:00-07:00",
+        "Maximum": 2.0
+      }
+    ],
+    "workQueueOldestAgeMax": [
+      {
+        "t": "2026-10-28T01:16:00-07:00",
+        "Maximum": 160.0
+      },
+      {
+        "t": "2026-10-28T01:17:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T01:18:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T01:19:00-07:00",
+        "Maximum": 5.0
+      },
+      {
+        "t": "2026-10-28T01:20:00-07:00",
+        "Maximum": 5.0
+      }
+    ]
+  },
+  "alarmHistory": [
+    {
+      "alarm": "catalogbridge-RowSystemFailures",
+      "t": "2026-10-28T01:19:40.882000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    }
+  ]
+}

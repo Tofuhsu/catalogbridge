@@ -1,0 +1,60 @@
+{
+  "experiment": "duplicate_delivery",
+  "jobId": "07d4902c-566a-58e8-bda0-1957499fa078",
+  "startedAt": "2026-10-28T08:09:03.088550+00:00",
+  "injected": "500 duplicate work messages (new messageIds, same business keys)",
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 24.415,
+    "dispatchAttempts": 1,
+    "reportKey": "reports/07d4902c-566a-58e8-bda0-1957499fa078/d75aa02f-b09f-4232-8c31-461dc7c5ea5f/catalogbridge.v1.csv"
+  },
+  "perJobFromLogs": {
+    "workerDuplicateOutcomes": 500,
+    "workerCreatedOutcomes": 500,
+    "workerRowFailures": 0,
+    "dispatchRuns": 2,
+    "ingestFailures": 0,
+    "lifecycleFailures": 0
+  },
+  "metricsNote": "CloudWatch metric sums below are global for the time window (may include other jobs); perJobFromLogs is job-scoped except failure counts, which are window-scoped.",
+  "metrics": {
+    "DuplicatesSkipped": 500.0,
+    "RowSystemFailures": 0,
+    "TxConflictRetries": 2.0,
+    "IngestFailures": 0,
+    "LifecycleFailures": 0,
+    "workerConcurrentExecutionsMax": [
+      {
+        "t": "2026-10-28T01:09:00-07:00",
+        "Maximum": 2.0
+      }
+    ],
+    "workQueueOldestAgeMax": [
+      {
+        "t": "2026-10-28T01:09:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T01:10:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T01:11:00-07:00",
+        "Maximum": 0.0
+      }
+    ]
+  },
+  "alarmHistory": []
+}

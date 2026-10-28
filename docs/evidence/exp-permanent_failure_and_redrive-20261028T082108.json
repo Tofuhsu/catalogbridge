@@ -1,0 +1,158 @@
+{
+  "experiment": "permanent_failure_and_redrive",
+  "jobId": "f3b9eca9-2493-574e-8e5e-1c5616d90ca9",
+  "startedAt": "2026-10-28T08:21:08.663463+00:00",
+  "injected": "rows 5 and 250 always fail with a system error (maxReceiveCount=3)",
+  "secondsUntilBothInDLQ": 553,
+  "stateWhileInDLQ": {
+    "status": "PROCESSING",
+    "expectedCount": 500,
+    "processedCount": 498,
+    "validCount": 498,
+    "invalidCount": 0,
+    "resultsRows": 498,
+    "distinctRows": 498,
+    "resultsValid": 498,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 498
+    },
+    "endToEndSeconds": null,
+    "dispatchAttempts": 1,
+    "reportKey": null
+  },
+  "dlqAlarmState": "ALARM",
+  "secondsFromDLQToAlarm": 206,
+  "redriveOutput": "redrove 2 message(s) from work DLQ",
+  "result": {
+    "status": "COMPLETED",
+    "expectedCount": 500,
+    "processedCount": 500,
+    "validCount": 500,
+    "invalidCount": 0,
+    "resultsRows": 500,
+    "distinctRows": 500,
+    "resultsValid": 500,
+    "countersMatchResults": true,
+    "resultReceiveCountHistogram": {
+      "1": 500
+    },
+    "endToEndSeconds": 772.233,
+    "dispatchAttempts": 1,
+    "reportKey": "reports/f3b9eca9-2493-574e-8e5e-1c5616d90ca9/d1777752-f01c-440b-966a-3e601131c2d0/catalogbridge.v1.csv"
+  },
+  "perJobFromLogs": {
+    "workerDuplicateOutcomes": 0,
+    "workerCreatedOutcomes": 500,
+    "workerRowFailures": 6,
+    "dispatchRuns": 1,
+    "ingestFailures": 0,
+    "lifecycleFailures": 0
+  },
+  "metricsNote": "CloudWatch metric sums below are global for the time window (may include other jobs); perJobFromLogs is job-scoped except failure counts, which are window-scoped.",
+  "metrics": {
+    "DuplicatesSkipped": 0,
+    "RowSystemFailures": 6.0,
+    "TxConflictRetries": 1.0,
+    "IngestFailures": 0,
+    "LifecycleFailures": 0,
+    "workerConcurrentExecutionsMax": [
+      {
+        "t": "2026-10-28T01:21:00-07:00",
+        "Maximum": 2.0
+      },
+      {
+        "t": "2026-10-28T01:24:00-07:00",
+        "Maximum": 1.0
+      },
+      {
+        "t": "2026-10-28T01:27:00-07:00",
+        "Maximum": 1.0
+      },
+      {
+        "t": "2026-10-28T01:34:00-07:00",
+        "Maximum": 2.0
+      }
+    ],
+    "workQueueOldestAgeMax": [
+      {
+        "t": "2026-10-28T01:21:00-07:00",
+        "Maximum": 4.0
+      },
+      {
+        "t": "2026-10-28T01:22:00-07:00",
+        "Maximum": 64.0
+      },
+      {
+        "t": "2026-10-28T01:23:00-07:00",
+        "Maximum": 64.0
+      },
+      {
+        "t": "2026-10-28T01:24:00-07:00",
+        "Maximum": 186.0
+      },
+      {
+        "t": "2026-10-28T01:25:00-07:00",
+        "Maximum": 243.0
+      },
+      {
+        "t": "2026-10-28T01:26:00-07:00",
+        "Maximum": 305.0
+      },
+      {
+        "t": "2026-10-28T01:27:00-07:00",
+        "Maximum": 364.0
+      },
+      {
+        "t": "2026-10-28T01:28:00-07:00",
+        "Maximum": 424.0
+      },
+      {
+        "t": "2026-10-28T01:29:00-07:00",
+        "Maximum": 468.0
+      },
+      {
+        "t": "2026-10-28T01:30:00-07:00",
+        "Maximum": 522.0
+      },
+      {
+        "t": "2026-10-28T01:31:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T01:32:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T01:33:00-07:00",
+        "Maximum": 0.0
+      },
+      {
+        "t": "2026-10-28T01:34:00-07:00",
+        "Maximum": 0.0
+      }
+    ]
+  },
+  "alarmHistory": [
+    {
+      "alarm": "catalogbridge-StalledJobs",
+      "t": "2026-10-28T01:33:22.937000-07:00",
+      "summary": "Alarm updated from OK to ALARM"
+    },
+    {
+      "alarm": "catalogbridge-WorkDLQNotEmpty",
+      "t": "2026-10-28T01:33:44.068000-07:00",
+      "summary": "Alarm updated from OK to ALARM"
+    },
+    {
+      "alarm": "catalogbridge-WorkQueueOldestAge",
+      "t": "2026-10-28T01:33:05.534000-07:00",
+      "summary": "Alarm updated from ALARM to OK"
+    },
+    {
+      "alarm": "catalogbridge-WorkQueueOldestAge",
+      "t": "2026-10-28T01:28:05.524000-07:00",
+      "summary": "Alarm updated from OK to ALARM"
+    }
+  ]
+}
