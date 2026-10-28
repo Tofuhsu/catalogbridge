@@ -80,3 +80,27 @@ Task: produce a clean product list with columns `sku,title,price,currency,stock`
 
 Caveat to keep in the write-up: the author built the tool and knows the rules, and doing the manual
 pass first teaches the file; the CatalogBridge time is therefore optimistic.
+
+## Public data results (2026-10-28)
+
+Raw: `docs/evidence/public-data-20261028T020925.json`. Run through the deployed stack with the
+current rules (rules.v2). Answer keys were written by hand from the column meanings.
+
+| File | Source / license | Rows × columns | AI mapping (4 fields) | Run result |
+| --- | --- | --- | --- | --- |
+| WooCommerce `sample_products.csv` | woocommerce/woocommerce, GPL-2.0 | 25 × 51 | 4/4 (price ← `Regular price`, not `Sale price`) | 22 valid / 3 invalid |
+| Magento `products_gear_bags.csv` | magento/magento2-sample-data, OSL-3.0 | 14 × 19 | 4/4 (stock ← `qty`) | 14 valid / 0 invalid |
+
+Not obtained: Shopify `product_template.csv` (HTTP 403, bot protection, not bypassed); Open Food
+Facts search export (HTTP 503 twice).
+
+What this exposed:
+
+1. **Stock required (rules.v1) rejected the whole WooCommerce file** (0/25 offline): the sample leaves
+   `Stock` empty for every product because stock is not tracked. The author decided to make stock
+   optional (decisions D20); with rules.v2 the file gives 22/25.
+2. The 3 remaining invalid rows are a `variable` and a `grouped` parent product with no own price
+   (rows 1, 2, 23): correctly rejected.
+3. **Variants are flattened:** 7 `variation` rows pass as independent products and lose the link to
+   their parent. Product variants are out of scope (spec §4.3); this is now listed as a known limit.
+4. AI suggestions picked the right 4 columns out of 51 and 19 on these real headers (2 files only).

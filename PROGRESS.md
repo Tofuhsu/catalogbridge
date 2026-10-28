@@ -96,3 +96,22 @@ the author is signed in as the AWS root user (recommend an Identity Center admin
 - [x] Sign-out (A3) done by the author in the browser.
 - Remaining items that only the author can do (real users, Identity Center admin, deleting test
   data) are written up outside the repo with step-by-step instructions.
+
+## 2026-10-28
+
+- [x] Worker writes one transaction per job group in a batch (N conditional puts + one counter ADD),
+      per-row fallback keeps the dedup proof (decisions D19). 3 new tests; a mutation that treats a
+      cancelled group as committed fails 2 tests.
+- [x] Importer timeout 60 s -> 30 s (IngestQueue visibility 360 s -> 180 s, D21).
+- [x] Failure experiments run 3 on the new code: 6/6 consistent, 0 duplicate results (9 runs across
+      the three duplicate-producing scenarios so far). Crash mid-dispatch 378 s -> 193 s; slow
+      downstream 98.6 s -> 70.9 s.
+- [x] Benchmarks v2 (all four configs from a clean worktree at b806f68): batch 10 / conc 2
+      53.9 -> 181.5 rows/s, p95 38.4 s -> 13.5 s; batch 10 / conc 5 91.4 -> 393.1 rows/s,
+      p95 102.3 s -> 6.9 s; batch 1 unchanged as expected. A benchmark loop that would have deployed
+      uncommitted code mid-series was stopped before it executed; the series was re-run cleanly.
+- [x] Without recruiting: public WooCommerce and Magento sample files through the live stack. The
+      WooCommerce file exposed that "stock required" rejects shops that do not track stock; the author
+      decided stock is optional -> catalogbridge.v2 / rules.v2 (D20). Result 22/25 and 14/14; AI 8/8.
+- [x] Author self-test protocol (B) and an unseen fixture prepared; not run yet (author's task).
+- [x] Final deployment: v2 code, batch 10 / conc 2, fault injection off; live e2e 16/16.

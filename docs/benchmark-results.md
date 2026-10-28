@@ -1,7 +1,13 @@
 # Benchmark results
 
-Measured 2026-10-23 (America/Los_Angeles) against the deployed stack. Runner:
-`scripts/benchmark.py`; raw data: `docs/evidence/bench-<config>-*.json`.
+Measured against the deployed stack. Runner: `scripts/benchmark.py`.
+
+- **v2 (current code, 2026-10-28)**: worker writes one transaction per job group in a batch
+  (decisions D19). Raw: `docs/evidence/bench-v2-<config>-*.json`. All four configurations were
+  deployed from a clean git worktree at commit `b806f68` (worker CodeSha256 `9AzK6Ubi...` in every run).
+  `bench-v2-b10-c2-faultsparam-on-*.json` is an extra earlier run made while the test-only fault
+  parameter still existed (worker polled SSM every 5 s); it is not used in the tables.
+- **v1 (2026-10-23)**: one transaction per row. Raw: `docs/evidence/bench-v1-per-row-tx/`.
 
 ## Setup (fixed across configurations)
 
@@ -11,7 +17,7 @@ Measured 2026-10-23 (America/Los_Angeles) against the deployed stack. Runner:
 | Dataset | `fixtures/rows_500.csv` (500 valid rows, product limit per job) |
 | Load per run | 4 independent 500-row jobs started together = 2,000 rows |
 | Runs per configuration | 3, sequential, in one window per configuration |
-| Worker | Python 3.13, arm64, 256 MB, timeout 30 s, same code (CodeSha256 `jheCYgbI...` in all runs) |
+| Worker | Python 3.13, arm64, 256 MB, timeout 30 s; same code within a version (v1 `jheCYgbI...`, v2 `9AzK6Ubi...`) |
 | Retry settings | WorkQueue visibility 180 s, maxReceiveCount 3; worker retries `TransactionConflict` up to 5 times in-process |
 | Varied | Worker SQS mapping `batchSize` (1, 10) and `maximumConcurrency` (2, 5), changed with `cdk deploy -c ...` |
 | Warm/cold | Not separated. Changing the mapping does not redeploy function code, so run 1 of a configuration is not guaranteed cold; numbers include whatever cold starts occurred. |
@@ -26,7 +32,38 @@ Metric definitions:
 - Counts of transaction conflict retries, row system failures and duplicates come from the
   worker's CloudWatch EMF metrics over the configuration's window.
 
-## Results
+## Results v2 (batched transaction, 2026-10-28)
+
+| Batch | Max conc. | rows/s per run | Median rows/s | Job e2e p50 | Job e2e p95 | Job e2e max | Tx conflict retries | Row system failures | Duplicate results | Group commits / fallbacks |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 2 | 38.6, 36.3, 37.2 | 37.2 | 41.2 s | 55.4 s | 55.9 s | 273 | 0 | 0 | n/a* |
+| 10 | 2 | 142.9, 208.3, 181.5 | 181.5 | 10.0 s | 13.5 s | 14.2 s | 56 | 0 | 0 | 890 / 0 |
+| 1 | 5 | 66.5, 78.3, 74.0 | 74.0 | 22.0 s | 29.5 s | 31.1 s | 1,173 | 0 | 0 | n/a* |
+| 10 | 5 | 329.5, 393.1, 402.2 | 393.1 | 5.6 s | 6.9 s | 7.3 s | 161 | 0 | 0 | 985 / 0 |
+
+All 12 runs consistent. \* At batch size 1 a batch has one row, so the group path is not used; the
+few group commits counted in those windows come from the one-minute window overlap with the previous
+configuration.
+
+### v1 → v2
+
+| Batch / conc. | Median rows/s v1 → v2 | Job e2e p95 v1 → v2 | Conflict retries v1 → v2 |
+| --- | --- | --- | --- |
+| 10 / 2 | 53.9 → 181.5 | 38.4 s → 13.5 s | 307 → 56 |
+| 10 / 5 | 91.4 → 393.1 | 102.3 s → 6.9 s | 1,083 → 161 |
+| 1 / 2 | 37.4 → 37.2 | 55.0 s → 55.4 s | 228 → 273 |
+| 1 / 5 | 10.1 → 74.0 | 202.4 s → 29.5 s | 1,338 → 1,173 |
+
+- With batch size 10, writing the shared Job counter once per group instead of once per row cut
+  conflict retries by ~6x and removed the ~200 s tail seen in v1 at concurrency 5 (no row system
+  failures in v2 runs).
+- Batch size 1 runs the same per-row path in both versions, so v1 and v2 should be equivalent
+  there. The b1/c5 difference (no 200 s tail in v2) is most likely run-to-run variance: conflict
+  retries stayed high (1,173), and a retry-exhausted row remains possible. It is not claimed as an
+  improvement.
+- Three runs per configuration; these are observations, not significance tests.
+
+## Results v1 (per-row transaction, 2026-10-23)
 
 | Batch | Max conc. | rows/s per run | Median rows/s | Job e2e p50 | Job e2e p95 | Job e2e max | Tx conflict retries | Row system failures | Duplicate results | Worker invocations |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -37,7 +74,7 @@ Metric definitions:
 
 All 12 runs ended with every job consistent (counters == results == 500 per job).
 
-## What the numbers show (and do not show)
+## What the v1 numbers showed (and do not show)
 
 1. **Batch 10 vs 1 at max concurrency 2:** 53.9 vs 37.4 median rows/s and 34.3 s vs 42.5 s job
    p50, with ~10x fewer invocations (607 vs 6,000). Batching amortized per-invocation overhead.
@@ -62,8 +99,8 @@ above are the ones to quote.
 
 ## Possible next steps (not done)
 
-- Sharded or per-batch aggregated counters (one Job update per batch instead of per row), or
-  derive completion from Results counts, to remove the single-item hot spot.
+- Per-batch counters are done (v2). Larger scale would still concentrate writes on one Job item;
+  sharded counters or deriving completion from Results counts would remove it.
 - Longer/jittered conflict backoff or more in-process attempts before returning a row to SQS.
 - Shorter WorkQueue visibility for faster retry of the rare failed row (must stay ≥ 6× timeout).
 - Separate cold vs warm runs and more runs per configuration.

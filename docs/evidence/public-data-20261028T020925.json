@@ -1,0 +1,78 @@
+{
+  "files": [
+    {
+      "file": "woocommerce_sample_products.csv",
+      "url": "https://raw.githubusercontent.com/woocommerce/woocommerce/trunk/plugins/woocommerce/sample-data/sample_products.csv",
+      "license": "GPL-2.0 (woocommerce/woocommerce)",
+      "bytes": 18265,
+      "sha256": "1d6f48b6f33fdc04615a9722c59f8cb8a07ed62e94a1dc3237313983d1884721",
+      "status": "AWAITING_MAPPING",
+      "rows": 25,
+      "columns": 51,
+      "rejectReasons": null,
+      "ai": {
+        "suggested": {
+          "sku": "SKU",
+          "title": "Name",
+          "price": "Regular price",
+          "stock": "Stock"
+        },
+        "notes": "Mapped SKU to 'SKU', title to 'Name', price to 'Regular price' (using regular price as the primary price field), and stock to 'Stock'. The 'Stock' column appears empty in samples but is the appropriate target for inventory quantity. Sale price was not used as regular price is more standard for base pricing.",
+        "latencyMs": 5186,
+        "perTarget": {
+          "sku": "correct",
+          "title": "correct",
+          "price": "correct",
+          "stock": "correct"
+        }
+      },
+      "run": {
+        "status": "COMPLETED_WITH_ERRORS",
+        "valid": 22,
+        "invalid": 3,
+        "errorCodes": {
+          "price:REQUIRED": 3
+        },
+        "endToEndSeconds": 1.276
+      }
+    },
+    {
+      "file": "magento_products_gear_bags.csv",
+      "url": "https://raw.githubusercontent.com/magento/magento2-sample-data/2.4-develop/app/code/Magento/CatalogSampleData/fixtures/SimpleProduct/products_gear_bags.csv",
+      "license": "OSL-3.0 (magento/magento2-sample-data)",
+      "bytes": 9428,
+      "sha256": "b1a97ddfc0bdb1dbb21055e40f00ff09f9f8df1ebe5273c93466778acaf5d938",
+      "status": "AWAITING_MAPPING",
+      "rows": 14,
+      "columns": 19,
+      "rejectReasons": null,
+      "ai": {
+        "suggested": {
+          "sku": "sku",
+          "title": "name",
+          "price": "price",
+          "stock": "qty"
+        },
+        "notes": "All four target fields mapped successfully. SKU from 'sku' column, title from 'name' column, price from 'price' column, and stock from 'qty' column which contains inventory quantities.",
+        "latencyMs": 4709,
+        "perTarget": {
+          "sku": "correct",
+          "title": "correct",
+          "price": "correct",
+          "stock": "correct"
+        }
+      },
+      "run": {
+        "status": "COMPLETED",
+        "valid": 14,
+        "invalid": 0,
+        "errorCodes": {},
+        "endToEndSeconds": 1.223
+      }
+    }
+  ],
+  "notObtained": {
+    "Shopify product_template.csv": "https://help.shopify.com/csv/product_template.csv returned HTTP 403 (bot protection); not bypassed",
+    "Open Food Facts search export": "world.openfoodfacts.org search download returned HTTP 503 twice"
+  }
+}

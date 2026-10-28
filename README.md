@@ -113,14 +113,15 @@ All routes require `Authorization: Bearer <Cognito ID token>`.
 ## Known limits
 
 - Single region, invited accounts, one file per job, ≤500 rows / 1 MB, CSV only, no product
-  variants, no direct store integration, no exchange-rate conversion.
-- Every row updates the same Job item (counter hot spot); this design is not meant for very large
-  files without changes (see decisions D7).
+  variants (variation rows are exported as independent products), no direct store integration,
+  no exchange-rate conversion.
+- Counters live on one Job item; batching reduced writes to it (decisions D19, measured in
+  benchmark-results.md), but very large files would still need sharded counters.
 - The dedup guarantee covers DynamoDB results and counters only, not external side effects.
 - The account's Lambda concurrency quota is 10, so reserved concurrency is not configured.
 - No Shopify adapter (not validated against a real store, so not claimed).
-- User validation so far: synthetic data plus the author's own browser test; no external users yet
-  (see [docs/user-validation.md](docs/user-validation.md)).
+- No external users yet. Checked instead on synthetic data, two public platform sample files
+  (WooCommerce, Magento) and the author's own browser test (see [docs/user-validation.md](docs/user-validation.md)).
 - AI mapping was evaluated only on 8 synthetic files (32/32 decisions matched the key); real
   supplier files are untested.
 - Recovery from a crash mid-dispatch waits for the ingest queue visibility timeout (180 s; measured
