@@ -1,4 +1,4 @@
-"""Row-level business validation and normalization (rules.v1).
+"""Row-level business validation and normalization (rules.v2: stock optional).
 
 A row that fails these rules becomes an INVALID result. That is a completed
 outcome, never a retry: retrying cannot make a negative price valid.
@@ -77,7 +77,7 @@ def validate_row(source: dict, currency: str, duplicate_of=None):
 
     raw_stock = (source.get("stock") or "").strip()
     if not raw_stock:
-        errors.append(_err("stock", "REQUIRED", "Stock is required."))
+        norm["stock"] = ""  # optional since rules.v2: not tracked by this supplier
     elif not _INT.match(raw_stock):
         errors.append(_err("stock", "BAD_FORMAT", "Stock must be a whole number."))
     else:

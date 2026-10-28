@@ -28,7 +28,8 @@ Automated equivalents already pass (`scripts/e2e.py`); this list is the human ch
 - [ ] C1. `synonyms.csv`: map Item Code→sku, Product Name→title, Unit Price→price, Qty Available→stock
       by hand → "Confirm mapping and run" becomes enabled.
 - [ ] C2. Set two fields to the same column → "used twice" appears and the run button is disabled.
-- [ ] C3. Leave one field "(not mapped)" → run button disabled.
+- [ ] C3. Leave **price** "(not mapped)" → run button disabled. (Leaving **stock** unmapped is allowed
+      since catalogbridge.v2: output stock is empty.)
 - [ ] C4. "Save as template" (job needs a supplier name, e.g. `acme`) → "Saved as template ...".
 - [ ] C5. New `synonyms.csv` job → "Apply a saved template" → all 4 fields filled.
 - [ ] C6. New `en_standard.csv` job → apply the same template → red message listing the columns the

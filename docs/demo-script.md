@@ -4,7 +4,7 @@ Prepare: signed-in browser at the site URL, `fixtures/synonyms.csv`, `fixtures/m
 the CloudWatch dashboard `CatalogBridge`, and a terminal in the repo.
 
 1. **Problem (30 s).** Two suppliers, two header styles (`synonyms.csv`, `zh_headers.csv`). Goal:
-   one validated `catalogbridge.v1` file plus an error report.
+   one validated `catalogbridge.v2` file plus an error report.
 2. **Upload + preview (45 s).** New job → upload `synonyms.csv` → status moves CREATED →
    VALIDATING_UPLOAD → AWAITING_MAPPING. Point out: presigned POST straight to private S3, the
    job is bound to the uploaded object version.

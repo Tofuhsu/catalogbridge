@@ -101,3 +101,25 @@ this only makes a wrong but valid mapping visible before it runs.
 With email as the sign-in attribute, Cognito's `{username}` is an internal ID, and a one-line body
 made the temporary password easy to mis-copy; the first tester could not sign in. The template now
 says to sign in with the email address and puts the password on its own line.
+
+## D19. One transaction per job group in a worker batch (2026-10-28)
+The per-row design wrote the shared Job item once per row, the measured hot spot (D7). Now rows of
+the same job run in one SQS batch go into a single TransactWriteItems: one conditional Put per row
+(`attribute_not_exists`) plus ONE counter `ADD n`. If the transaction is cancelled because any row
+already exists, the job state changed, the same row appears twice in the batch (DynamoDB forbids two
+operations on one item), or conflicts persist, the worker falls back to the per-row transaction,
+which proves duplicates row by row. So the dedup guarantee is unchanged; only the number of writes
+to the Job item drops (about 1 per 10 rows at batch size 10; no change at batch size 1).
+Trade-off: a cancelled group costs one extra transaction attempt before the per-row path.
+
+## D20. Stock optional; output schema catalogbridge.v2 (2026-10-28)
+The public WooCommerce sample leaves `Stock` empty for products whose stock is not tracked, so
+rules.v1 (stock required) rejected all 25 rows. Decided by the author: stock is optional; an empty
+value is exported as empty, a present value must still be an integer >= 0. Because consumers of the
+CSV can now see an empty stock, the schema version moved to `catalogbridge.v2` and rules to
+`rules.v2`. Jobs record the versions at run time, so older results remain labelled v1.
+
+## D21. Importer timeout 30 s (2026-10-28)
+Dispatching 500 rows takes seconds, but the 60 s timeout forced a 360 s IngestQueue visibility
+timeout, which is how long a crashed dispatch waited before retry (measured ~378 s). With 30 s the
+visibility is 180 s; measured recovery ~193 s.

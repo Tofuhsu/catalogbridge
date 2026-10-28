@@ -1,16 +1,21 @@
 # Failure experiments
 
-All experiments ran against the deployed stack in us-west-2 on 2026-10-23 (America/Los_Angeles),
-through the public API with throwaway Cognito users, using test-only fault injection
-(`scripts/faults.py`, SSM parameter, deployed with `-c faultInjection=true`). Runner:
-`scripts/experiments.py`. Raw results: `docs/evidence/exp-*.json` (run 2) and
-`docs/evidence/run1-before-txconflict-fix/` (run 1).
+All experiments ran against the deployed stack in us-west-2 (America/Los_Angeles dates), through
+the public API with throwaway Cognito users, using test-only fault injection (`scripts/faults.py`,
+SSM parameter, deployed with `-c faultInjection=true` only for the experiment window). Runner:
+`scripts/experiments.py`. Raw results:
+
+| Run | Date | Code version | Evidence |
+| --- | --- | --- | --- |
+| 1 | 2026-10-23 | first deployment | `docs/evidence/run1-before-txconflict-fix/` |
+| 2 | 2026-10-23 | + retry Job-item writes on `TransactionConflict` | `docs/evidence/run2-before-batch-tx/` |
+| 3 | 2026-10-28 | + one transaction per job group in a worker batch; importer timeout 30 s (IngestQueue visibility 180 s) | `docs/evidence/exp-*.json` |
 
 Each job uses `fixtures/rows_500.csv` (500 valid rows) unless noted. "Consistent" means, read back
 from DynamoDB with consistent reads after the run: `processedCount == expectedCount ==` number of
 Results items `==` number of distinct `rowNumber`s, and `validCount`/`invalidCount` match the
 Results. Worker settings during experiments: batch size 10, max concurrency 2, 256 MB, timeout 30 s,
-WorkQueue visibility 180 s, maxReceiveCount 3; IngestQueue visibility 360 s.
+WorkQueue visibility 180 s, maxReceiveCount 3; IngestQueue visibility 360 s (runs 1-2) / 180 s (run 3).
 
 ## Summary
 
@@ -18,17 +23,29 @@ WorkQueue visibility 180 s, maxReceiveCount 3; IngestQueue visibility 360 s.
 | --- | --- | --- | --- | --- | --- |
 | Duplicate delivery (500 extra messages, new messageIds) | 1 | COMPLETED | 500 / 500 / 500 | 0 | 23.1 s |
 | | 2 | COMPLETED | 500 / 500 / 500 | 0 | 29.5 s |
+| | 3 | COMPLETED | 500 / 500 / 500 | 0 | 24.4 s |
 | Crash after commit (rows 3, 50, 120, 333, 499) | 1 | COMPLETED | 500 / 500 / 500 | 0 | 364.7 s ⚠ |
 | | 2 | COMPLETED | 500 / 500 / 500 | 0 | 12.9 s |
+| | 3 | COMPLETED | 500 / 500 / 500 | 0 | 4.8 s |
 | Crash halfway through dispatch (after 200 of 500) | 1 | COMPLETED | 500 / 500 / 500 | 0 | 378.7 s |
 | | 2 | COMPLETED | 500 / 500 / 500 | 0 | 378.3 s |
+| | 3 | COMPLETED | 500 / 500 / 500 | 0 | 192.8 s |
 | Permanent system failure (rows 5, 250) → DLQ → fix → redrive | 1* | COMPLETED after redrive | 500 / 500 / 500 | 0 | 599.2 s |
 | | 2 | COMPLETED after redrive | 500 / 500 / 500 | 0 | 759.1 s |
+| | 3 | COMPLETED after redrive | 500 / 500 / 500 | 0 | 772.2 s |
 | Crash after report write (12-row file with 5 invalid) | 2 | COMPLETED_WITH_ERRORS | 12 / 12 / 12 | 0 | 2.1 s |
+| | 3 | COMPLETED_WITH_ERRORS | 12 / 12 / 12 | 0 | 2.7 s |
 | Slow downstream (+2 s per worker batch) | 2 | COMPLETED | 500 / 500 / 500 | 0 | 98.6 s |
+| | 3 | COMPLETED | 500 / 500 / 500 | 0 | 70.9 s |
 
 Across the three duplicate-producing scenarios (duplicate delivery, crash after commit, crash
-mid-dispatch) there were **6 runs and 0 duplicate results**; across all 10 experiment runs, 0.
+mid-dispatch) there were **9 runs and 0 duplicate results**; across all 16 experiment runs, 0.
+
+Run 3 changes, measured: crash mid-dispatch recovery 378 s → 193 s (shorter IngestQueue visibility
+timeout); slow downstream 98.6 s → 70.9 s (fewer writes to the Job item per batch). The permanent
+failure run is dominated by maxReceiveCount × visibility timeout plus waiting for the alarm, so it
+did not get faster (DLQ alarm reached ALARM 206 s after the messages arrived; redrive completed
+the job).
 This is a measured count on these runs, not a proof of exactly-once processing. The guarantee is
 scoped to DynamoDB results and counters within one run.
 

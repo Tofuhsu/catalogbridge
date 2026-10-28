@@ -1,7 +1,7 @@
 # Architecture
 
 CatalogBridge turns supplier product CSVs (different column names, English or Chinese) into one
-validated, versioned output schema (`catalogbridge.v1`) plus an error report. It is a small
+validated, versioned output schema (`catalogbridge.v2`) plus an error report. It is a small
 asynchronous processing pipeline on AWS serverless services. This is the author's own design for
 a demo MVP; it says nothing about how AWS builds its services internally.
 
@@ -33,7 +33,7 @@ stream failure destination, scheduled stall checker, presigned download links.
 
 | Source → consumer | Kind | Failure handling |
 | --- | --- | --- |
-| IngestQueue → Importer | Lambda SQS event source mapping, batch 5, max concurrency 2 | Partial batch response; IngestDLQ after 5 receives |
+| IngestQueue → Importer | Lambda SQS event source mapping, batch 5, max concurrency 2, timeout 30 s (visibility 180 s) | Partial batch response; IngestDLQ after 5 receives |
 | WorkQueue → Worker | SQS event source mapping, batch 10, max concurrency 2 (configurable) | Partial batch response; WorkDLQ after 3 receives |
 | Jobs table stream → Lifecycle | DynamoDB Streams event source mapping, batch 100, filter on status | Report first failed sequence number; bisect on error; 5 retries / 1 h max age; failure records to LifecycleFailureDLQ |
 | S3 → EventBridge → IngestQueue | EventBridge rule target (not an event source mapping) | 8 retries / 2 h, then EventDeliveryDLQ |
@@ -82,7 +82,9 @@ CREATED -> VALIDATING_UPLOAD -> AWAITING_MAPPING -> RUN_REQUESTED -> PROCESSING 
    `SendMessageBatch`, checks every entry's result, and only then sets `dispatchComplete=true`. A
    crash midway makes SQS redeliver `DISPATCH_ROWS`; the full dispatch is repeated and the Worker
    deduplicates.
-8. **Worker**: per row, one DynamoDB transaction: `Put Results[jobId,rowNumber]` with
+8. **Worker**: rows of the same job in one SQS batch are written in one DynamoDB transaction (one
+   conditional Put per row + one counter update for the group); if anything is uncertain it falls
+   back to the per-row transaction: `Put Results[jobId,rowNumber]` with
    `attribute_not_exists` + `ADD processedCount, validCount|invalidCount` on the Job (conditioned on
    the same `runRequestId` and `PROCESSING`). On cancellation it proves a duplicate with a
    consistent read of the existing result's business key

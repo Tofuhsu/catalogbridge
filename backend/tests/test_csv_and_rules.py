@@ -133,3 +133,13 @@ def test_manual_all_in_one_fixture_expectations():
     assert outcome[8] == "price:BAD_FORMAT" and outcome[9] == "price:TOO_PRECISE"
     assert outcome[10] == "title:REQUIRED" and outcome[13] == "stock:TOO_LARGE"
     assert outcome[14] == "price:BAD_FORMAT"
+
+
+def test_stock_is_optional_in_rules_v2():
+    norm, errs = rules.validate_row(ok_src(stock=""), "USD")
+    assert errs == [] and norm["stock"] == ""
+    norm, errs = rules.validate_row(ok_src(stock=None), "USD")
+    assert errs == [] and norm["stock"] == ""
+    # A value that is present must still be a whole number >= 0.
+    assert rules.validate_row(ok_src(stock="2.5"), "USD")[0] is None
+    assert rules.validate_row(ok_src(stock="-1"), "USD")[0] is None

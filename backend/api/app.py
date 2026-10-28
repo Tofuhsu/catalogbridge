@@ -336,11 +336,13 @@ def run_job(owner, event, job_id):
         r = jobs_table().update_item(
             Key={"jobId": job_id},
             UpdateExpression="SET #s = :rr, frozenMapping = :m, runRequestId = :r, expectedCount = :n, "
+                             "schemaVersion = :sv, rulesVersion = :rv, "
                              "processedCount = :zero, validCount = :zero, invalidCount = :zero, "
                              "dispatchComplete = :false, runRequestedAt = :t, updatedAt = :t",
             ConditionExpression="#s = :am AND mappingVersion = :v AND attribute_not_exists(runRequestId)",
             ExpressionAttributeNames={"#s": "status"},
             ExpressionAttributeValues={":rr": schema.RUN_REQUESTED, ":m": clean, ":r": run_id,
+                                       ":sv": schema.SCHEMA_VERSION, ":rv": schema.RULES_VERSION,
                                        ":n": as_int(job["rowCount"]), ":zero": 0, ":false": False, ":t": t,
                                        ":am": schema.AWAITING_MAPPING, ":v": as_int(job.get("mappingVersion"))},
             ReturnValues="ALL_NEW",

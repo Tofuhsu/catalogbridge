@@ -126,7 +126,7 @@ async function createCorrected() {
         <div class="stat"><b>{{ job.invalidCount ?? 0 }}</b>invalid</div>
         <div class="stat"><b>{{ seconds ?? '-' }}</b>seconds end to end</div>
       </div>
-      <p class="muted small">Mapping (frozen): {{ TARGETS.map((t) => `${t} ← ${job!.mapping[t]}`).join(' · ') }} · source: {{ job.mappingSource }}</p>
+      <p class="muted small">Mapping (frozen): {{ TARGETS.map((t) => `${t} ← ${job!.mapping[t] ?? '(not mapped)'}`).join(' · ') }} · source: {{ job.mappingSource }}</p>
     </div>
 
     <div v-if="job.status === 'COMPLETED' || job.status === 'COMPLETED_WITH_ERRORS'" class="card">

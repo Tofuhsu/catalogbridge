@@ -3,6 +3,8 @@ import { idToken } from './auth';
 
 export type Mapping = Partial<Record<'sku' | 'title' | 'price' | 'stock', string>>;
 export const TARGETS = ['sku', 'title', 'price', 'stock'] as const;
+// stock is optional since catalogbridge.v2 (suppliers that do not track inventory leave it empty).
+export const REQUIRED_TARGETS: readonly string[] = ['sku', 'title', 'price'];
 export const CURRENCIES = ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'TWD', 'JPY'];
 
 export interface Job {

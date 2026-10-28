@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { api, newToken, TARGETS, ApiError, type Job, type Mapping, type Row, type Template } from '../api';
+import { api, newToken, TARGETS, REQUIRED_TARGETS, ApiError, type Job, type Mapping, type Row, type Template } from '../api';
 
 const props = defineProps<{ job: Job }>();
 const emit = defineEmits<{ (e: 'changed', job: Job): void }>();
@@ -37,7 +37,7 @@ const usedTwice = computed(() => {
   Object.values(mapping.value).forEach((c) => c && (seen[c] = (seen[c] ?? 0) + 1));
   return Object.keys(seen).filter((c) => seen[c] > 1);
 });
-const complete = computed(() => TARGETS.every((t) => mapping.value[t]) && usedTwice.value.length === 0);
+const complete = computed(() => REQUIRED_TARGETS.every((t) => mapping.value[t as keyof Mapping]) && usedTwice.value.length === 0);
 
 // Show what each chosen column actually contains, so a shifted mapping (e.g. sku <- Brand) is
 // visible before running. Added after the first real tester mapped every field one column off.
@@ -150,7 +150,7 @@ async function run() {
       <thead><tr><th>Output field</th><th>Source column</th></tr></thead>
       <tbody>
         <tr v-for="t in TARGETS" :key="t">
-          <td><b>{{ t }}</b> <span class="muted small">required</span></td>
+          <td><b>{{ t }}</b> <span class="muted small">{{ REQUIRED_TARGETS.includes(t) ? 'required' : 'optional (empty = not tracked)' }}</span></td>
           <td>
             <select :value="mapping[t] ?? ''" @change="setField(t, ($event.target as HTMLSelectElement).value)">
               <option value="">(not mapped)</option>

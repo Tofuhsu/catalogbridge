@@ -161,3 +161,21 @@ def test_daily_limit(aws, monkeypatch):
     assert call("POST /jobs", A, {"clientToken": new_token()})[0] == 201
     assert call("POST /jobs", A, {"clientToken": new_token()})[0] == 201
     assert call("POST /jobs", A, {"clientToken": new_token()})[0] == 429
+
+
+def test_run_without_stock_mapping_exports_empty_stock(aws):
+    from tests.flow import lifecycle_on
+    job_id = ready_job(aws, n=3)
+    m = {k: v for k, v in MAPPING.items() if k != "stock"}
+    assert call("PUT /jobs/{jobId}/mapping", A, {"mapping": m, "mappingVersion": 0}, path={"jobId": job_id})[0] == 200
+    before = get_job_item(aws, job_id)
+    s, o = call("POST /jobs/{jobId}/run", A, {"runRequestId": new_token(), "mappingVersion": 1}, path={"jobId": job_id})
+    assert s == 202 and o["job"]["schemaVersion"] == "catalogbridge.v2" and o["job"]["rulesVersion"] == "rules.v2"
+    lifecycle_on(before, get_job_item(aws, job_id))
+    pump_ingest(aws)
+    run_worker(work_records(aws))
+    finalize_via_stream(aws, job_id)
+    job = get_job_item(aws, job_id)
+    assert job["status"] == "COMPLETED" and job["validCount"] == 3
+    out = aws["s3"].get_object(Bucket=aws["WORK_BUCKET"], Key=job["outputKey"])["Body"].read().decode("utf-8-sig")
+    assert out.splitlines()[1].split(",")[4] == ""  # stock column empty

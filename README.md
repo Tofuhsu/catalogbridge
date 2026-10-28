@@ -17,9 +17,9 @@ validated catalog file, with a row-level error report you can fix and re-run.
 3. Preview, then map source columns to `sku, title, price, stock`: manually, from a saved
    supplier template, copied from a previous job, or suggested by Amazon Bedrock (optional; manual
    always works). Currency is a job setting (no exchange-rate conversion).
-4. Run. Rows are validated (required fields, decimal price ≥ 0 with currency precision, integer
-   stock ≥ 0, duplicate SKUs in the file). Progress updates live.
-5. Download the standard CSV (`catalogbridge.v1`) and an error report. Fix invalid rows in the
+4. Run. Rows are validated (sku, title, price required; decimal price ≥ 0 with currency precision;
+   stock optional, but if present an integer ≥ 0; duplicate SKUs in the file). Progress updates live.
+5. Download the standard CSV (`catalogbridge.v2`) and an error report. Fix invalid rows in the
    browser and create a **corrected job** linked to the original.
 
 ## Architecture
@@ -123,5 +123,5 @@ All routes require `Authorization: Bearer <Cognito ID token>`.
   (see [docs/user-validation.md](docs/user-validation.md)).
 - AI mapping was evaluated only on 8 synthetic files (32/32 decisions matched the key); real
   supplier files are untested.
-- Recovery from a crash mid-dispatch takes ~6 min because the ingest queue visibility timeout is
-  360 s (measured); a shorter importer timeout would speed this up.
+- Recovery from a crash mid-dispatch waits for the ingest queue visibility timeout (180 s; measured
+  ~193 s end to end).
