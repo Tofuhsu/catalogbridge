@@ -1,0 +1,109 @@
+{
+  "startedAt": "20261028T010816",
+  "region": "us-west-2",
+  "checks": [
+    {
+      "check": "500 rows complete with consistent counters",
+      "pass": true,
+      "status": "COMPLETED",
+      "processed": 500,
+      "outputRows": 500,
+      "endToEndSeconds": 10.046
+    },
+    {
+      "check": "report sorted by source row",
+      "pass": true
+    },
+    {
+      "check": "report download is byte-identical on repeat",
+      "pass": true
+    },
+    {
+      "check": "business errors become INVALID results",
+      "pass": true,
+      "valid": 7,
+      "invalid": 5,
+      "codes": [
+        "BAD_FORMAT",
+        "DUPLICATE_SKU",
+        "NEGATIVE",
+        "REQUIRED"
+      ]
+    },
+    {
+      "check": "corrected job completes and keeps parent unchanged",
+      "pass": true,
+      "child": "COMPLETED",
+      "childValid": 12,
+      "childInvalid": 0
+    },
+    {
+      "check": "empty file refused by upload policy (content-length-range)",
+      "pass": true,
+      "s3Status": 400
+    },
+    {
+      "check": "structural reject: rows_501.csv",
+      "pass": true,
+      "reasons": [
+        "File has 501 data rows; the limit is 500."
+      ]
+    },
+    {
+      "check": "structural reject: duplicate_header.csv",
+      "pass": true,
+      "reasons": [
+        "Duplicate header name(s): sku."
+      ]
+    },
+    {
+      "check": "structural reject: not_utf8.csv",
+      "pass": true,
+      "reasons": [
+        "File is not valid UTF-8 (byte offset 29)."
+      ]
+    },
+    {
+      "check": "BOM + quoted newlines parsed",
+      "pass": true
+    },
+    {
+      "check": "upload > 1 MB rejected by S3 policy",
+      "pass": true,
+      "s3Status": 400
+    },
+    {
+      "check": "user B gets 404 on every A-job route",
+      "pass": true,
+      "statuses": {
+        "GET /jobs/{A-job}": 404,
+        "GET /jobs/{A-job}/preview": 404,
+        "GET /jobs/{A-job}/results": 404,
+        "GET /jobs/{A-job}/downloads": 404,
+        "PUT /jobs/{A-job}/mapping": 404,
+        "POST /jobs/{A-job}/run": 404,
+        "POST /jobs/{A-job}/mapping-suggestion": 404,
+        "POST /jobs": 404
+      }
+    },
+    {
+      "check": "user B lists none of A's jobs/templates",
+      "pass": true
+    },
+    {
+      "check": "buckets are not publicly readable",
+      "pass": true
+    },
+    {
+      "check": "API rejects requests without a token",
+      "pass": true,
+      "status": 401
+    },
+    {
+      "check": "double-click create returns the same job",
+      "pass": true
+    }
+  ],
+  "passed": 16,
+  "total": 16
+}

@@ -47,3 +47,36 @@ support. If no one can be found, keep this section marked "not validated".
 | Date | Participant (anonymized) | Role | File | Usual time | CatalogBridge time | Mapping edits | Output usable? | Would reuse? | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | | | | | | | | | | |
+
+## Without recruiting: two substitutes (labelled as such)
+
+Neither of these is user validation. They test behaviour on real-world formats and give the
+author's own before/after timing.
+
+### A. Public real-world sample files
+
+`scripts/public_data_check.py` runs official sample product files from e-commerce platforms
+through the deployed stack (files are downloaded at run time, not committed; SHA-256 recorded).
+Results: `docs/evidence/public-data-*.json` and the section "Public data results" below.
+
+### B. Author self-test (dogfooding), one task, two methods
+
+File: `fixtures/self_test_supplier_b.csv` (40 rows, unfamiliar headers 倉位/貨號/品名/單價/現貨/單位,
+currency TWD). It contains a few planted problems; **do not open the generator code before the test**.
+
+Task: produce a clean product list with columns `sku,title,price,currency,stock` (price with
+2 decimals, currency TWD) **and** a list of the rows that cannot be used with the reason.
+
+1. **Manual first** (Excel/Numbers/Google Sheets, any method you would really use). Start a timer
+   when you open the file; stop when you have both the clean list and the problem list.
+2. **Then CatalogBridge**: New job (currency TWD) → map → run → download output and error report.
+   Time from choosing the file to having both downloads.
+3. Compare your manual problem list with the error report. Count problems each method found.
+
+| Date | Method | Time (min) | Mapping/column edits | Problems found | Problems missed | Output usable as-is? | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| | Manual | | | | | | |
+| | CatalogBridge | | | | | | |
+
+Caveat to keep in the write-up: the author built the tool and knows the rules, and doing the manual
+pass first teaches the file; the CatalogBridge time is therefore optimistic.

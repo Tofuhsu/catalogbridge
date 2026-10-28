@@ -105,6 +105,23 @@ def main():
         ["Acme", "CB-015", "USB-C Cable", "9.90", "50"],                  # 15 valid
     ], bom=True)
 
+    # Author self-test (B): unfamiliar headers, 40 rows, 6 planted problems. Kept out of the
+    # manual checklist so the author does not know the answers in advance.
+    srng = random.Random(4242)
+    names = ["Bamboo Cup", "Linen Towel", "Desk Organizer", "Travel Pillow", "Glass Jar", "Plant Pot",
+             "Key Holder", "Bento Box", "Wall Clock", "Yoga Mat"]
+    st_rows = []
+    for i in range(1, 41):
+        st_rows.append([f"{srng.randint(10, 99)}", f"B{i:03d}-TW", f"{names[i % 10]} {i}",
+                        f"{srng.randint(100, 4000) / 10:.1f}", str(srng.randint(0, 80)), "pcs"])
+    st_rows[4][3] = "NT$120"     # row 5: currency symbol
+    st_rows[11][4] = "-3"        # row 12: negative stock
+    st_rows[17][1] = ""          # row 18: missing SKU
+    st_rows[22][1] = "B003-TW"   # row 23: duplicate of row 3
+    st_rows[28][3] = "45.555"    # row 29: too many decimals
+    st_rows[33][2] = ""          # row 34: missing name
+    write("self_test_supplier_b.csv", ["倉位", "貨號", "品名", "單價", "現貨", "單位"], st_rows)
+
     with open(os.path.join(ROOT, "ai_eval.json"), "w", encoding="utf-8") as f:
         json.dump(answer, f, ensure_ascii=False, indent=2)
     print("fixtures written to", os.path.abspath(ROOT))
